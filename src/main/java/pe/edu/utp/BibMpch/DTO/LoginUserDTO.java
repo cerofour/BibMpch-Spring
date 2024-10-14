@@ -6,6 +6,6 @@ import lombok.*;
 @Builder
 @ToString
 public class LoginUserDTO {
-	private String username;
+	private String document;
 	private String psk;
 }

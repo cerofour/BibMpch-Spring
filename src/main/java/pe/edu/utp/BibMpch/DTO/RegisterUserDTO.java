@@ -6,6 +6,8 @@ import lombok.Data;
 @Data
 @Builder
 public class RegisterUserDTO {
-	private String username; // user-id
+	private String document;
+	private Short documentTypeId;
+	private Short roleId;
 	private String psk;
 }

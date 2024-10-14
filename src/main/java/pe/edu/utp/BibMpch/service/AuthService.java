@@ -24,11 +24,11 @@ public class AuthService {
 	public LoginResponse authenticate(LoginUserDTO loginUserDTO) {
 		authManager.authenticate(
 				new UsernamePasswordAuthenticationToken(
-						loginUserDTO.getUsername(),
+						loginUserDTO.getDocument(),
 						loginUserDTO.getPsk()));
 
 		UserDetails userDetails = userRepository
-				.findByUsername(loginUserDTO.getUsername())
+				.findByDocument(loginUserDTO.getDocument())
 				.orElseThrow(() -> new UsernameNotFoundException("Cannot authenticate, username not found"));
 
 		return LoginResponse.builder()
@@ -39,8 +39,10 @@ public class AuthService {
 
 	public LoginResponse signup(RegisterUserDTO registerUserDTO) {
 		User user = User.builder()
-				.username(registerUserDTO.getUsername())
+				.document(registerUserDTO.getDocument())
+				.documentTypeId(registerUserDTO.getDocumentTypeId())
 				.psk(passwordEncoder.encode(registerUserDTO.getPsk()))
+				.roleId(registerUserDTO.getRoleId())
 				.build();
 
 		userRepository.save(user);

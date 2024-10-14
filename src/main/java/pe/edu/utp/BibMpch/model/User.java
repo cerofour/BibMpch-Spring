@@ -9,23 +9,30 @@ import java.util.Collection;
 import java.util.List;
 
 @Entity
-@Table(name = "usuarios")
+@Table(name = "tb_usuario")
 @Data
 @Builder
 @AllArgsConstructor
 @ToString
 @NoArgsConstructor
 public class User implements UserDetails {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(nullable = false, name = "id_usuario")
-	private Long id;
+	@Column(name = "usua_id")
+	private Long userId;
 
-	@Column(nullable = false, name = "psk")
+	@Column(name = "usua_rol_usuario_id")
+	private Short roleId;
+
+	@Column(name = "usua_tipo_documento_id")
+	private Short documentTypeId;
+
+	@Column(name = "usua_documento")
+	private String document;
+
+	@Column(name = "usua_psk")
 	private String psk;
-
-	@Column(name = "username")
-	private String username;
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -35,6 +42,11 @@ public class User implements UserDetails {
 	@Override
 	public String getPassword() {
 		return psk;
+	}
+
+	@Override
+	public String getUsername() {
+		return getDocument();
 	}
 
 	@Override

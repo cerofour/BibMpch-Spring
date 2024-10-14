@@ -43,7 +43,7 @@ public class ApplicationConfiguration {
 		 * so just return a lambda function that queries the UserRepository
 		 * for the desired user.
 		 */
-		return (username) -> userRepository.findByUsername(username)
+		return (username) -> userRepository.findByDocument(username)
 				.orElseThrow(() -> new UsernameNotFoundException("Username not found"));
 	}
 
