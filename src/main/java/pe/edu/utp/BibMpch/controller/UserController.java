@@ -1,30 +1,43 @@
 package pe.edu.utp.BibMpch.controller;
 
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
+import pe.edu.utp.BibMpch.DTO.LoginUserDTO;
 import pe.edu.utp.BibMpch.model.User;
-import pe.edu.utp.BibMpch.repository.UserRepository;
+import pe.edu.utp.BibMpch.service.UserService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @CrossOrigin
 @RestController
-@RequestMapping(value = "/api/v1")
+@RequestMapping(value = "/api/v1/users")
 @AllArgsConstructor
 public class UserController {
-	@Autowired
-	private UserRepository userRepository;
 
-	@GetMapping(value = "/users")
-	public ResponseEntity<List<User>> getUsers() {
-		List<User> result = new ArrayList<>();
-		userRepository.findAll().forEach(result::add);
-		return ResponseEntity.ok(result);
+	private final UserService userService;
+
+	@GetMapping(value = "/")
+	public ResponseEntity<List<User>> getAllUsers() {
+		return ResponseEntity.ok(userService.allUsers());
+	}
+
+	@GetMapping(value = "/me")
+	public ResponseEntity<User> getCurrentUser() {
+		User thisUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		return ResponseEntity.ok(thisUser);
+	}
+
+	@PostMapping(value = "/update_psk")
+	public ResponseEntity<Void> updatePsk(@RequestBody LoginUserDTO newPsk) {
+		return ResponseEntity.status(userService.updatePsk(newPsk.getDocument(), newPsk.getPsk()))
+				.build();
+	}
+
+	@DeleteMapping(value = "/delete/{document}")
+	public ResponseEntity<Void> deleteUser(@PathVariable(name = "document") String document) {
+		return ResponseEntity.status(userService.deleteUser(document))
+				.build();
 	}
 }
