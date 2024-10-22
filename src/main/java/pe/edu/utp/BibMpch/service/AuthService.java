@@ -1,9 +1,6 @@
 package pe.edu.utp.BibMpch.service;
 
-import java.io.IOException;
 import lombok.RequiredArgsConstructor;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
