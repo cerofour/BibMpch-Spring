@@ -46,6 +46,11 @@ public class GlobalExceptionHandler {
 			errorDetail.setProperty("description", "El token JWT ha expirado.");
 		}
 
+		if (exception instanceof ResourceNotFoundException) {
+			errorDetail = ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(404), exception.getMessage());
+			errorDetail.setProperty("description", "Recurso no encontrado.");
+		}
+
 		if (errorDetail == null) {
 			errorDetail = ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(500), exception.getMessage());
 			errorDetail.setProperty("description", "Error desconocido.");
