@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pe.edu.utp.BibMpch.DTO.LoginResponse;
 import pe.edu.utp.BibMpch.DTO.LoginUserDTO;
-import pe.edu.utp.BibMpch.DTO.RegisterUserDTO;
+import pe.edu.utp.BibMpch.DTO.UserDTO;
 import pe.edu.utp.BibMpch.service.AuthService;
 
 @RequestMapping("/auth")
@@ -24,7 +24,7 @@ public class AuthenticationController {
 	}
 
 	@PostMapping("signup")
-	public ResponseEntity<LoginResponse> signup(@RequestBody RegisterUserDTO registerUserDTO) {
+	public ResponseEntity<LoginResponse> signup(@RequestBody UserDTO registerUserDTO) {
 		return ResponseEntity.ok(authService.signup(registerUserDTO));
 	}
 }

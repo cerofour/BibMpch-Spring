@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class RegisterUserDTO {
+public class UserDTO {
 	private String document;
 	private Short documentTypeId;
 	private Short roleId;

@@ -9,7 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import pe.edu.utp.BibMpch.DTO.LoginResponse;
 import pe.edu.utp.BibMpch.DTO.LoginUserDTO;
-import pe.edu.utp.BibMpch.DTO.RegisterUserDTO;
+import pe.edu.utp.BibMpch.DTO.UserDTO;
 import pe.edu.utp.BibMpch.model.User;
 import pe.edu.utp.BibMpch.repository.UserRepository;
 
@@ -37,7 +37,7 @@ public class AuthService {
 				.build();
 	}
 
-	public LoginResponse signup(RegisterUserDTO registerUserDTO) {
+	public LoginResponse signup(UserDTO registerUserDTO) {
 		User user = User.builder()
 				.document(registerUserDTO.getDocument())
 				.documentTypeId(registerUserDTO.getDocumentTypeId())
