@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import pe.edu.utp.BibMpch.DTO.TextDTO;
 import pe.edu.utp.BibMpch.model.Editorial;
-import pe.edu.utp.BibMpch.model.TextResource;
+import pe.edu.utp.BibMpch.model.Text;
 import pe.edu.utp.BibMpch.model.TextResourceType;
 import pe.edu.utp.BibMpch.repository.EditorialRepository;
 import pe.edu.utp.BibMpch.repository.TextRepository;
@@ -24,13 +24,17 @@ public class TextService {
 	private final EditorialRepository editorialRepository;
 	private final TextResourceTypeRepository textResourceTypeRepository;
 
-	public List<TextResource> allTexts() {
-		List<TextResource> textResources = new ArrayList<>();
+	public List<Text> allTexts() {
+		List<Text> textResources = new ArrayList<>();
 		textRepository.findAll().forEach(textResources::add);
 		return textResources;
 	}
 
-	public ResponseEntity<TextResource> newText(TextDTO textDTO) throws ResourceNotFoundException {
+	public Optional<Text> getById(Long id) {
+		return textRepository.findById(id);
+	}
+
+	public ResponseEntity<Text> newText(TextDTO textDTO) throws ResourceNotFoundException {
 
 		System.out.println(textDTO);
 
@@ -45,7 +49,7 @@ public class TextService {
 			throw new ResourceNotFoundException(
 					String.format("Tipo de texto '%s' no encontrado.", textDTO.getTextType()));
 
-		TextResource text = TextResource.builder()
+		Text text = Text.builder()
 				.title(textDTO.getTitle())
 				.edition(textDTO.getEdition())
 				.volume(textDTO.getVolume())
@@ -56,5 +60,9 @@ public class TextService {
 				.build();
 		textRepository.save(text);
 		return ResponseEntity.ok(text);
+	}
+
+	public void delete(Text textResource) {
+		textRepository.delete(textResource);
 	}
 }

@@ -1,7 +1,10 @@
 package pe.edu.utp.BibMpch.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.Set;
 
 @Table(name = "tb_autor")
 @Entity
