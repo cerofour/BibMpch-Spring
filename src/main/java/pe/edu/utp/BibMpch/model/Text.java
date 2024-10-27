@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.Date;
+import java.util.Set;
 
 @Entity
 @Data
@@ -15,7 +15,7 @@ import java.util.Date;
 @Table(name = "tb_recurso_textual")
 @AllArgsConstructor
 @NoArgsConstructor
-public class TextResource {
+public class Text {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "rete_id")
@@ -43,4 +43,11 @@ public class TextResource {
 
 	@Column(name = "rete_volumen")
 	private Short volume;
+
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinTable(
+			name = "tb_recurso_textual_autor",
+			joinColumns = @JoinColumn(name = "reau_recurso_textual_id"),
+			inverseJoinColumns = @JoinColumn(name = "reau_autor_id"))
+	private Set<Author> authors;
 }
