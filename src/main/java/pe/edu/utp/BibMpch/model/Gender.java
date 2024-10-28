@@ -8,12 +8,11 @@ import lombok.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter @Setter
 public class Gender {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "gene_id")
-    private Long genderId;
+    private Long id;
 
     @Column(name = "gene_nombre")
     private String genderName;

@@ -9,8 +9,6 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter @Setter
-
 public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,5 +45,4 @@ public class Customer {
     @OneToOne
     @JoinColumn(name = "clie_carnet_id")
     private Card card;
-
 }

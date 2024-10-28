@@ -8,7 +8,6 @@ import lombok.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter @Setter
 public class Status {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

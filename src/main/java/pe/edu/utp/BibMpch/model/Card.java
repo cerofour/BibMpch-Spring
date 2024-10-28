@@ -10,7 +10,6 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter @Setter
 public class Card {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
