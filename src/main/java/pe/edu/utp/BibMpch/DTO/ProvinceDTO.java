@@ -10,10 +10,12 @@ import pe.edu.utp.BibMpch.model.Province;
 @AllArgsConstructor
 public class ProvinceDTO {
     private Long id;
+    private Long region;
     private String provinceName;
 
     public ProvinceDTO(Province p) {
         this.id = p.getId();
+        this.region = p.getRegion().getId();
         this.provinceName = p.getProvinceName();
     }
 }

@@ -10,10 +10,12 @@ import pe.edu.utp.BibMpch.model.Region;
 @AllArgsConstructor
 public class RegionDTO {
     private Long id;
+    private Long country;
     private String regionName;
 
     public RegionDTO(Region r) {
         this.id = r.getId();
+        this.country = r.getCountry().getId();
         this.regionName = r.getRegionName();
     }
 }

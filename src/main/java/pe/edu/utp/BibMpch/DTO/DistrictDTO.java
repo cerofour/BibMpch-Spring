@@ -10,10 +10,12 @@ import pe.edu.utp.BibMpch.model.District;
 @AllArgsConstructor
 public class DistrictDTO {
     private Long id;
+    private Long province;
     private String districtName;
 
     public DistrictDTO(District d) {
         this.id = d.getId();
+        this.province = d.getProvince().getId();
         this.districtName = d.getDistrictName();
     }
 }
