@@ -10,7 +10,8 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Card {
+@Builder
+public class Carnet {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "carn_id")
@@ -24,8 +25,8 @@ public class Card {
     private String code;
 
     @Column(name = "carn_fec_emision")
-    private LocalDate cardIssuanceDate;
+    private LocalDate carnetIssuanceDate;
 
     @Column(name = "carn_fec_vencimiento")
-    private LocalDate cardExpirationDate;
+    private LocalDate carnetExpirationDate;
 }

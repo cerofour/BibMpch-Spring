@@ -44,5 +44,5 @@ public class Customer {
 
     @OneToOne
     @JoinColumn(name = "clie_carnet_id")
-    private Card card;
+    private Carnet carnet;
 }
