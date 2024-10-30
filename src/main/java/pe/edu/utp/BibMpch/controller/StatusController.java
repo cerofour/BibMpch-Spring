@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pe.edu.utp.BibMpch.model.Status;
+import pe.edu.utp.BibMpch.DTO.StatusDTO;
 import pe.edu.utp.BibMpch.service.StatusService;
 
 import java.util.List;
@@ -18,19 +18,19 @@ public class StatusController {
     private final StatusService statusService;
 
     @GetMapping("/")
-    public ResponseEntity<List<Status>> getAllStatuses() {
-        List<Status> statuses = (List<Status>) statusService.getAllStatuses();
+    public ResponseEntity<List<StatusDTO>> getAllStatuses() {
+        List<StatusDTO> statuses = statusService.getAllStatuses();
         return ResponseEntity.ok(statuses);
     }
     @GetMapping("/get")
-    public ResponseEntity<Status> getStatusByAttribute(@RequestParam(required = false) Short id,
-                                                       @RequestParam(required = false) String statusName) {
+    public ResponseEntity<StatusDTO> getStatusByAttribute(@RequestParam(required = false) Short id,
+                                                          @RequestParam(required = false) String statusName) {
         try {
             if (id != null) {
-                Status status = statusService.getStatusById(id);
+                StatusDTO status = statusService.getStatusById(id);
                 return ResponseEntity.ok(status);
             } else if (statusName != null) {
-                Status status = statusService.getStatusByStatusName(statusName);
+                StatusDTO status = statusService.getStatusByStatusName(statusName);
                 return ResponseEntity.ok(status);
             } else {
                 return ResponseEntity.badRequest().build();
@@ -39,13 +39,29 @@ public class StatusController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
-
     @PostMapping("/")
-    public ResponseEntity<Status> createStatus(@RequestBody Status status) {
-        Status savedStatus = statusService.createStatus(status);
+    public ResponseEntity<StatusDTO> createStatus(@RequestBody StatusDTO statusDTO) {
+        StatusDTO savedStatus = statusService.createStatus(statusDTO);
         return new ResponseEntity<>(savedStatus, HttpStatus.CREATED);
     }
-
+    @PostMapping("/update")
+    public ResponseEntity<StatusDTO> updateStatus(@RequestParam(required = false) Short id,
+                                                  @RequestParam(required = false) String statusName,
+                                                  @RequestBody StatusDTO statusDetails) {
+        try {
+            if (id != null) {
+                StatusDTO updatedStatus = statusService.updateStatus(id, statusDetails);
+                return ResponseEntity.ok(updatedStatus);
+            } else if (statusName != null) {
+                StatusDTO updatedStatus = statusService.updateStatusByStatusName(statusName, statusDetails);
+                return ResponseEntity.ok(updatedStatus);
+            } else {
+                return ResponseEntity.badRequest().build();
+            }
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
     @DeleteMapping("/delete")
     public ResponseEntity<Void> deleteStatusByAttribute(@RequestParam(required = false) Short id,
                                                         @RequestParam(required = false) String statusName) {
@@ -61,25 +77,6 @@ public class StatusController {
             }
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-    }
-
-    @PostMapping("/update")
-    public ResponseEntity<Status> updateStatus(@RequestParam(required = false) Short id,
-                                               @RequestParam(required = false) String statusName,
-                                               @RequestBody Status statusDetails) {
-        try {
-            if (id != null) {
-                Status updatedStatus = statusService.updateStatus(id, statusDetails);
-                return ResponseEntity.ok(updatedStatus);
-            } else if (statusName != null) {
-                Status updatedStatus = statusService.updateStatusByStatusName(statusName, statusDetails);
-                return ResponseEntity.ok(updatedStatus);
-            } else {
-                return ResponseEntity.badRequest().build();
-            }
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
 }
