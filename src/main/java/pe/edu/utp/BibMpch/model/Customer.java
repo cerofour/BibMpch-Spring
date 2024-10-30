@@ -1,7 +1,9 @@
 package pe.edu.utp.BibMpch.model;
 
 import jakarta.persistence.*;
+import jakarta.persistence.Convert;
 import lombok.*;
+import pe.edu.utp.BibMpch.Convert.ConvertPhoneNumber;
 
 @Table(name = "tb_cliente")
 @Entity
@@ -37,6 +39,7 @@ public class Customer {
     private Address address;
 
     @Column(name = "clie_telefono")
+    @Convert(converter = ConvertPhoneNumber.class)
     private String phoneNumber;
 
     @Column(name = "clie_correo")
@@ -45,4 +48,8 @@ public class Customer {
     @OneToOne
     @JoinColumn(name = "clie_carnet_id")
     private Carnet carnet;
+
+    @ManyToOne
+    @JoinColumn(name = "clie_nivel_educativo_id")
+    private Education education;
 }

@@ -10,7 +10,7 @@ import pe.edu.utp.BibMpch.model.Region;
 @AllArgsConstructor
 public class RegionDTO {
     private Long id;
-    private Long country;
+    private Short country;
     private String regionName;
 
     public RegionDTO(Region r) {

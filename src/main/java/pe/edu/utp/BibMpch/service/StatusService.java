@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pe.edu.utp.BibMpch.model.Status;
 import pe.edu.utp.BibMpch.repository.StatusRepository;
-
 import java.util.List;
 
 @Service
@@ -19,7 +18,7 @@ public class StatusService {
     public Iterable<Status> getAllStatuses() {
         return statusRepository.findAll();
     }
-    public Status getStatusById(Long id) {
+    public Status getStatusById(Short id) {
         return statusRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Status not found with id: " + id));
     }
@@ -30,7 +29,7 @@ public class StatusService {
         return statusRepository.findByStatusName(statusName)
                 .orElseThrow(() -> new EntityNotFoundException("Status not found with statusName: " + statusName));
     }
-    public Status updateStatus(Long id, Status newStatus) {
+    public Status updateStatus(Short id, Status newStatus) {
         Status existingStatus = statusRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Status not found with id: " + id));
 
@@ -47,7 +46,7 @@ public class StatusService {
         existingStatus.setActive(statusDetails.isActive());
         return statusRepository.save(existingStatus);
     }
-    public void deleteStatusById(Long id) {
+    public void deleteStatusById(Short id) {
         if (!statusRepository.existsById(id)) {
             throw new EntityNotFoundException("Status not found with id: " + id);
         }

@@ -14,11 +14,12 @@ public class CustomerDTO {
     private String name;
     private String pLastName;
     private String mLastName;
-    private Long gender;
+    private Short gender;
     private Long address;
     private String phoneNumber;
     private String email;
     private Long carnet;
+    private Short education;
 
     public CustomerDTO(Customer cu) {
         this.id = cu.getId();
@@ -31,5 +32,6 @@ public class CustomerDTO {
         this.phoneNumber = cu.getPhoneNumber();
         this.email = cu.getEmail();
         this.carnet = cu.getCarnet().getId();
+        this.education = cu.getEducation().getId();
     }
 }

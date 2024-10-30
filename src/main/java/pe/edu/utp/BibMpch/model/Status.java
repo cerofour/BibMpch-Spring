@@ -13,7 +13,7 @@ public class Status {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ties_id")
-    private Long id;
+    private Short id;
 
     @Column(name = "ties_tipo")
     private String statusName;
