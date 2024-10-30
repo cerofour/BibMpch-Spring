@@ -1,17 +1,20 @@
 package pe.edu.utp.BibMpch.DTO;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import pe.edu.utp.BibMpch.model.Status;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class StatusDTO {
     private Short id;
+    //NotNull y Size
     private String statusName;
     private boolean isActive;
 
@@ -28,10 +31,8 @@ public class StatusDTO {
         return status;
     }
     public static List<StatusDTO> fromEntityList(List<Status> statuses) {
-        List<StatusDTO> statusDTOs = new ArrayList<>();
-        for (Status status : statuses) {
-            statusDTOs.add(new StatusDTO(status));
-        }
-        return statusDTOs;
+        return statuses.stream()
+                .map(StatusDTO::new)
+                .collect(Collectors.toList());
     }
 }

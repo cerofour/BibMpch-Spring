@@ -2,6 +2,7 @@ package pe.edu.utp.BibMpch.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import java.util.List;
 
 @Table(name = "tb_provincia")
 @Entity
@@ -21,4 +22,7 @@ public class Province {
 
     @Column(name = "prov_nombre")
     private String provinceName;
+
+    @OneToMany(mappedBy = "province", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<District> districts;
 }

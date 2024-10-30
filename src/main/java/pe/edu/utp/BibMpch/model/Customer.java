@@ -3,7 +3,6 @@ package pe.edu.utp.BibMpch.model;
 import jakarta.persistence.*;
 import jakarta.persistence.Convert;
 import lombok.*;
-import pe.edu.utp.BibMpch.Convert.ConvertPhoneNumber;
 
 @Table(name = "tb_cliente")
 @Entity
@@ -38,8 +37,7 @@ public class Customer {
     @JoinColumn(name = "clie_direccion_id")
     private Address address;
 
-    @Column(name = "clie_telefono")
-    @Convert(converter = ConvertPhoneNumber.class)
+    @Column(columnDefinition = "BPCHAR(9)", name = "clie_telefono")
     private String phoneNumber;
 
     @Column(name = "clie_correo")

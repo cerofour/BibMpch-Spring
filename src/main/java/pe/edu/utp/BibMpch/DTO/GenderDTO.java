@@ -1,16 +1,17 @@
 package pe.edu.utp.BibMpch.DTO;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import pe.edu.utp.BibMpch.model.Gender;
-
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class GenderDTO {
     private Short id;
     private String genderName;
@@ -26,10 +27,8 @@ public class GenderDTO {
         return gender;
     }
     public static List<GenderDTO> fromEntityList(List<Gender> genders) {
-        List<GenderDTO> genderDTOS = new ArrayList<>();
-        for (Gender gender : genders) {
-            genderDTOS.add(new GenderDTO(gender));
-        }
-        return genderDTOS;
+        return genders.stream()
+                .map(GenderDTO::new)
+                .collect(Collectors.toList());
     }
 }

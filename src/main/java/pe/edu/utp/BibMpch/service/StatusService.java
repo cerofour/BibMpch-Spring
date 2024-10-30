@@ -3,8 +3,10 @@ package pe.edu.utp.BibMpch.service;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import pe.edu.utp.BibMpch.DTO.StatusDTO;
 import pe.edu.utp.BibMpch.model.Status;
 import pe.edu.utp.BibMpch.repository.StatusRepository;
+
 import java.util.List;
 
 @Service
@@ -12,39 +14,44 @@ import java.util.List;
 public class StatusService {
     private final StatusRepository statusRepository;
 
-    public Status createStatus(Status status) {
-        return statusRepository.save(status);
+    public StatusDTO createStatus(StatusDTO statusDTO) {
+        Status status = statusDTO.toEntity();
+        Status savedStatus = statusRepository.save(status);
+        return new StatusDTO(savedStatus);
     }
-    public Iterable<Status> getAllStatuses() {
-        return statusRepository.findAll();
+    public List<StatusDTO> getAllStatuses() {
+        List<Status> statuses = (List<Status>) statusRepository.findAll();
+        return StatusDTO.fromEntityList(statuses);
     }
-    public Status getStatusById(Short id) {
-        return statusRepository.findById(id)
+    public StatusDTO getStatusById(Short id) {
+        Status status = statusRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Status not found with id: " + id));
+        return new StatusDTO(status);
     }
-    public List<Status> getStatusesByIsActive(boolean isActive) {
-        return statusRepository.findByIsActive(isActive);
-    }
-    public Status getStatusByStatusName(String statusName) {
-        return statusRepository.findByStatusName(statusName)
+    public StatusDTO getStatusByStatusName(String statusName) {
+        Status status = statusRepository.findByStatusName(statusName)
                 .orElseThrow(() -> new EntityNotFoundException("Status not found with statusName: " + statusName));
+        return new StatusDTO(status);
     }
-    public Status updateStatus(Short id, Status newStatus) {
+    public StatusDTO updateStatus(Short id, StatusDTO statusDTO) {
         Status existingStatus = statusRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Status not found with id: " + id));
 
-        existingStatus.setStatusName(newStatus.getStatusName());
-        existingStatus.setActive(newStatus.isActive());
+        existingStatus.setStatusName(statusDTO.getStatusName());
+        existingStatus.setActive(statusDTO.isActive());
 
-        return statusRepository.save(existingStatus);
+        Status updatedStatus = statusRepository.save(existingStatus);
+        return new StatusDTO(updatedStatus);
     }
-    public Status updateStatusByStatusName(String statusName, Status statusDetails) {
+    public StatusDTO updateStatusByStatusName(String statusName, StatusDTO statusDTO) {
         Status existingStatus = statusRepository.findByStatusName(statusName)
                 .orElseThrow(() -> new EntityNotFoundException("Status not found with statusName: " + statusName));
 
-        existingStatus.setStatusName(statusDetails.getStatusName());
-        existingStatus.setActive(statusDetails.isActive());
-        return statusRepository.save(existingStatus);
+        existingStatus.setStatusName(statusDTO.getStatusName());
+        existingStatus.setActive(statusDTO.isActive());
+
+        Status updatedStatus = statusRepository.save(existingStatus);
+        return new StatusDTO(updatedStatus);
     }
     public void deleteStatusById(Short id) {
         if (!statusRepository.existsById(id)) {
@@ -52,7 +59,6 @@ public class StatusService {
         }
         statusRepository.deleteById(id);
     }
-
     public void deleteStatusByStatusName(String statusName) {
         if (!statusRepository.existsByStatusName(statusName)) {
             throw new EntityNotFoundException("Status not found with statusName: " + statusName);
