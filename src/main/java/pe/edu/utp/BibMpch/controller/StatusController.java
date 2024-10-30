@@ -22,15 +22,8 @@ public class StatusController {
         List<Status> statuses = (List<Status>) statusService.getAllStatuses();
         return ResponseEntity.ok(statuses);
     }
-
     @GetMapping("/get")
-    public ResponseEntity<List<Status>> getStatusesByIsActive(@RequestParam boolean isActive) {
-        List<Status> statuses = statusService.getStatusesByIsActive(isActive);
-        return ResponseEntity.ok(statuses);
-    }
-
-    @GetMapping("/get")
-    public ResponseEntity<Status> getStatusByAttribute(@RequestParam(required = false) Long id,
+    public ResponseEntity<Status> getStatusByAttribute(@RequestParam(required = false) Short id,
                                                        @RequestParam(required = false) String statusName) {
         try {
             if (id != null) {
@@ -54,7 +47,7 @@ public class StatusController {
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<Void> deleteStatusByAttribute(@RequestParam(required = false) Long id,
+    public ResponseEntity<Void> deleteStatusByAttribute(@RequestParam(required = false) Short id,
                                                         @RequestParam(required = false) String statusName) {
         try {
             if (id != null) {
@@ -72,7 +65,7 @@ public class StatusController {
     }
 
     @PostMapping("/update")
-    public ResponseEntity<Status> updateStatus(@RequestParam(required = false) Long id,
+    public ResponseEntity<Status> updateStatus(@RequestParam(required = false) Short id,
                                                @RequestParam(required = false) String statusName,
                                                @RequestBody Status statusDetails) {
         try {

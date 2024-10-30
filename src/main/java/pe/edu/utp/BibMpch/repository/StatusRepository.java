@@ -6,7 +6,7 @@ import pe.edu.utp.BibMpch.model.Status;
 import java.util.List;
 import java.util.Optional;
 
-public interface StatusRepository extends CrudRepository<Status, Long> {
+public interface StatusRepository extends CrudRepository<Status, Short> {
     Optional<Status> findByStatusName(String statusName);
 
     List<Status> findByIsActive(boolean isActive);

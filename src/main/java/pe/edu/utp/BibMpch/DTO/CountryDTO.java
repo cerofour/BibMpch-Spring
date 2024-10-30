@@ -9,7 +9,7 @@ import pe.edu.utp.BibMpch.model.Country;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CountryDTO {
-    private Long id;
+    private Short id;
     private String countryName;
 
     public CountryDTO(Country co) {

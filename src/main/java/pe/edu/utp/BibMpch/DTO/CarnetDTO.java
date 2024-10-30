@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class CarnetDTO {
     private Long id;
-    private Long statusDTO;
+    private Short statusDTO;
     private String code;
     private LocalDate carnetIssuanceDate;
     private LocalDate carnetExpirationDate;

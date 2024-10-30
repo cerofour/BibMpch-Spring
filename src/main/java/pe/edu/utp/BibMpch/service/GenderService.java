@@ -17,17 +17,17 @@ public class GenderService {
     public Iterable<Gender> getAllGenders() {
         return genderRepository.findAll();
     }
-    public Gender getGenderById(Long id) {
+    public Gender getGenderById(Short id) {
         return genderRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Gender not found with id: " + id));
     }
-    public Gender updateGender(Long id, Gender newGender) {
+    public Gender updateGender(Short id, Gender newGender) {
         Gender existingGender = genderRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Gender not found with id: " + id));
         existingGender.setGenderName(newGender.getGenderName());
         return genderRepository.save(existingGender);
     }
-    public void deleteGenderById(Long id) {
+    public void deleteGenderById(Short id) {
         if (!genderRepository.existsById(id)) {
             throw new EntityNotFoundException("Gender not found with id: " + id);
         }

@@ -6,6 +6,6 @@ import pe.edu.utp.BibMpch.model.Country;
 
 import java.util.Optional;
 
-public interface CountryRepository extends JpaRepository<Country, Long> {
+public interface CountryRepository extends JpaRepository<Country, Short> {
     Optional<Country> findByCountryName(String countryName);
 }

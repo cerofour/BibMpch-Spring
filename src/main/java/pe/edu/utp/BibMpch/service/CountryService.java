@@ -27,11 +27,11 @@ public class CountryService {
     public List<Country> getAllCountries() {
         return (List<Country>) countryRepository.findAll();
     }
-    public Country getCountryById(Long id) {
+    public Country getCountryById(Short id) {
         return countryRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Country not found with id: " + id));
     }
-    public Country updateCountry(Long id, String countryName) {
+    public Country updateCountry(Short id, String countryName) {
         Country country = countryRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Country not found with id: " + id));
         Optional<Country> existingCountry = countryRepository.findByCountryName(countryName);
@@ -41,7 +41,7 @@ public class CountryService {
         country.setCountryName(countryName);
         return countryRepository.save(country);
     }
-    public void deleteCountry(Long id) {
+    public void deleteCountry(Short id) {
         if (!countryRepository.existsById(id)) {
             throw new EntityNotFoundException("Country not found with id: " + id);
         }
