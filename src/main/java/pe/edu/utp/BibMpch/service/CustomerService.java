@@ -22,9 +22,6 @@ public class CustomerService {
         User user = userRepository.findById(customer.getUser().getUserId())
                 .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + customer.getUser().getUserId()));
 
-        Gender gender = genderRepository.findById(customer.getGender().getId())
-                .orElseThrow(() -> new EntityNotFoundException("Gender not found with id: " + customer.getGender().getId()));
-
         Address address = addressRepository.findById(customer.getAddress().getId())
                 .orElseThrow(() -> new EntityNotFoundException("Address not found with id: " + customer.getAddress().getId()));
 
@@ -32,7 +29,6 @@ public class CustomerService {
                 .orElseThrow(() -> new EntityNotFoundException("Carnet not found with id: " + customer.getCarnet().getId()));
 
         customer.setUser(user);
-        customer.setGender(gender);
         customer.setAddress(address);
         customer.setCarnet(carnet);
 
@@ -52,9 +48,6 @@ public class CustomerService {
         User user = userRepository.findById(customerDetails.getUser().getUserId())
                 .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + customerDetails.getUser().getUserId()));
 
-        Gender gender = genderRepository.findById(customerDetails.getGender().getId())
-                .orElseThrow(() -> new EntityNotFoundException("Gender not found with id: " + customerDetails.getGender().getId()));
-
         Address address = addressRepository.findById(customerDetails.getAddress().getId())
                 .orElseThrow(() -> new EntityNotFoundException("Address not found with id: " + customerDetails.getAddress().getId()));
 
@@ -62,12 +55,7 @@ public class CustomerService {
                 .orElseThrow(() -> new EntityNotFoundException("Carnet not found with id: " + customerDetails.getCarnet().getId()));
 
         existingCustomer.setUser(user);
-        existingCustomer.setName(customerDetails.getName());
-        existingCustomer.setPLastName(customerDetails.getPLastName());
-        existingCustomer.setMLastName(customerDetails.getMLastName());
-        existingCustomer.setGender(gender);
         existingCustomer.setAddress(address);
-        existingCustomer.setPhoneNumber(customerDetails.getPhoneNumber());
         existingCustomer.setEmail(customerDetails.getEmail());
         existingCustomer.setCarnet(carnet);
 

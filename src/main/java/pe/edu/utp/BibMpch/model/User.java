@@ -34,6 +34,22 @@ public class User implements UserDetails {
 	@Column(name = "usua_psk")
 	private String psk;
 
+	@Column(name = "usua_nombre")
+	private String name;
+
+	@Column(name = "usua_apellido_paterno")
+	private String pLastName;
+
+	@Column(name = "usua_apellido_materno")
+	private String mLastName;
+
+	@Column(columnDefinition = "BPCHAR(9)", name = "usua_telefono")
+	private String phoneNumber;
+
+	@ManyToOne
+	@JoinColumn(name = "usua_genero_id")
+	private Gender gender;
+
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return List.of();
