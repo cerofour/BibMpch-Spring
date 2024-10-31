@@ -2,7 +2,6 @@ package pe.edu.utp.BibMpch.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.time.LocalDate;
 
 @Table(name = "tb_carnet")

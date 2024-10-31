@@ -1,7 +1,6 @@
 package pe.edu.utp.BibMpch.model;
 
 import jakarta.persistence.*;
-import jakarta.persistence.Convert;
 import lombok.*;
 
 @Table(name = "tb_cliente")
