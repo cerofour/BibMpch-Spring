@@ -7,6 +7,7 @@ import pe.edu.utp.BibMpch.DTO.CarnetDTO;
 import pe.edu.utp.BibMpch.model.Carnet;
 import pe.edu.utp.BibMpch.model.Status;
 import pe.edu.utp.BibMpch.repository.CarnetRepository;
+import pe.edu.utp.BibMpch.repository.CustomerRepository;
 import pe.edu.utp.BibMpch.repository.StatusRepository;
 import java.util.List;
 
@@ -15,6 +16,7 @@ import java.util.List;
 public class CarnetService {
     private final CarnetRepository carnetRepository;
     private final StatusRepository statusRepository;
+    private final CustomerRepository customerRepository;
 
     public CarnetDTO createCarnet(CarnetDTO carnetDTO) {
         Status status = findExistingStatus(carnetDTO.getStatusId());
@@ -47,8 +49,10 @@ public class CarnetService {
         return new CarnetDTO(updatedCarnet);
     }
     public void deleteCarnetById(Long id) {
-        if (!carnetRepository.existsById(id)) {
-            throw new EntityNotFoundException("Carnet not found with id: " + id);
+        Carnet carnet = carnetRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Carnet not found with id: " + id));
+        if (carnet.getCustomer() != null) {
+            customerRepository.delete(carnet.getCustomer());
         }
         carnetRepository.deleteById(id);
     }

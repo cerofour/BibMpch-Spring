@@ -28,4 +28,7 @@ public class Carnet {
 
     @Column(name = "carn_fec_vencimiento")
     private LocalDate carnetExpirationDate;
+
+    @OneToOne(mappedBy = "carnet")
+    private Customer customer;
 }

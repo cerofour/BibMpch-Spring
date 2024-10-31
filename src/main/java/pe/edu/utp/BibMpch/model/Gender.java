@@ -2,6 +2,7 @@ package pe.edu.utp.BibMpch.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import java.util.List;
 
 @Table(name = "tb_genero")
 @Entity
@@ -17,4 +18,7 @@ public class Gender {
 
     @Column(name = "gene_nombre")
     private String genderName;
+
+    @OneToMany(mappedBy = "gender", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<User> users;
 }

@@ -2,6 +2,7 @@ package pe.edu.utp.BibMpch.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import java.util.List;
 
 @Table(name = "tb_direccion_cliente")
 @Entity
@@ -21,4 +22,7 @@ public class Address {
 
     @Column(name = "dicl_direccion")
     private String address;
+
+    @OneToMany(mappedBy = "address", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Customer> customers;
 }

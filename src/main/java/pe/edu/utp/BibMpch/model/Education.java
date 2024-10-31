@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Table(name = "tb_nivel_educativo")
 @Entity
 @Data
@@ -20,4 +22,7 @@ public class Education {
 
     @Column(name = "nied_nombre")
     private String educationName;
+
+    @OneToMany(mappedBy = "education", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Customer> customers;
 }

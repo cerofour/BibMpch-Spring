@@ -19,15 +19,15 @@ public class Customer {
     @JoinColumn(name = "clie_usuario_id")
     private User user;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "clie_direccion_id")
     private Address address;
 
     @Column(name = "clie_correo")
     private String email;
 
-    @OneToOne
-    @JoinColumn(name = "clie_carnet_id")
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "clie_carnet_id", referencedColumnName = "carn_id")
     private Carnet carnet;
 
     @ManyToOne
