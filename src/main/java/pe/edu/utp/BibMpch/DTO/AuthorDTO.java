@@ -23,4 +23,13 @@ public class AuthorDTO {
 		this.plastname = a.getPLastName();
 		this.mlastname = a.getMLastName();
 	}
+
+	public Author toEntity() {
+		return Author.builder()
+				.name(this.name)
+				.pseudoname(this.pseudoname)
+				.pLastName(this.plastname)
+				.mLastName(this.mlastname)
+				.build();
+	}
 }

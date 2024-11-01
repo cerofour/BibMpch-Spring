@@ -44,7 +44,7 @@ public class Text {
 	@Column(name = "rete_volumen")
 	private Short volume;
 
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(
 			name = "tb_recurso_textual_autor",
 			joinColumns = @JoinColumn(name = "reau_recurso_textual_id"),
