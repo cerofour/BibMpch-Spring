@@ -22,7 +22,4 @@ public class Province {
 
     @Column(name = "prov_nombre")
     private String provinceName;
-
-    @OneToMany(mappedBy = "province", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<District> districts;
 }

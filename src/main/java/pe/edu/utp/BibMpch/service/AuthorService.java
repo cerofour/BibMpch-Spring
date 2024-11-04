@@ -17,17 +17,16 @@ import java.util.Optional;
 public class AuthorService {
 	private final AuthorRepository authorRepository;
 
-	public List<AuthorDTO> getAllAuthors() {
-		List<AuthorDTO> result = new ArrayList<>();
+	public List<Author> getAllAuthors() {
+		List<Author> result = new ArrayList<>();
 
-		authorRepository.findAll().forEach((author) -> result.add(new AuthorDTO(author)));
+		authorRepository.findAll().forEach(result::add);
 
 		return result;
 	}
 
-	public AuthorDTO getById(Long id) {
+	public Author getById(Long id) {
 		return authorRepository.findById(id)
-				.map(AuthorDTO::new)
 				.orElse(null);
 	}
 

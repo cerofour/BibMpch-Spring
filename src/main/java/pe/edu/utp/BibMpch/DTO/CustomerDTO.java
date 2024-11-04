@@ -1,27 +1,20 @@
 package pe.edu.utp.BibMpch.DTO;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import pe.edu.utp.BibMpch.model.Customer;
 
+/**
+ * The creation of a customer also creates an User and a Carnet. There is no other way
+ * of creating a Carnet other than that, so this DTO should receive all the necessary data
+ * to create, the User, the Client and the Carnet.
+ */
 @Data
-@NoArgsConstructor
+@Builder
 @AllArgsConstructor
+@ToString
 public class CustomerDTO {
-    private Long id;
-    private Long user;
-    private Long address;
+    private UserDTO userData;
+    private AddressDTO addressData;
+    private Short educationLevelId;
     private String email;
-    private Long carnet;
-    private Short education;
-
-    public CustomerDTO(Customer cu) {
-        this.id = cu.getId();
-        this.user = cu.getUser().getUserId();
-        this.address = cu.getAddress().getId();
-        this.email = cu.getEmail();
-        this.carnet = cu.getCarnet().getId();
-        this.education = cu.getEducation().getId();
-    }
 }

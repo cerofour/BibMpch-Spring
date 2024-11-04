@@ -19,16 +19,16 @@ public class AuthorController {
 
 	@GetMapping(value = "/")
 	@SuppressWarnings("unused")
-	public ResponseEntity<List<AuthorDTO>> getAllAuthors() {
+	public ResponseEntity<List<Author>> getAllAuthors() {
 		return ResponseEntity.ok(authorService.getAllAuthors());
 	}
 
 	@GetMapping(value = "/get")
 	@SuppressWarnings("unused")
-	public ResponseEntity<AuthorDTO> getAuthor(
+	public ResponseEntity<Author> getAuthor(
 		@RequestParam(name = "id") Long id) {
 
-		AuthorDTO author = authorService.getById(id);
+		Author author = authorService.getById(id);
 
 		return (author != null) ? ResponseEntity.ok(author)
 				: ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);

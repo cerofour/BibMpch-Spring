@@ -22,7 +22,4 @@ public class District {
 
     @Column(name = "dist_nombre")
     private String districtName;
-
-    @OneToMany(mappedBy = "district", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<Address> addresses;
 }

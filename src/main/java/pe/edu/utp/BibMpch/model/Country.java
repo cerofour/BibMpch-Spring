@@ -18,7 +18,4 @@ public class Country {
 
     @Column(name = "pais_nombre")
     private String countryName;
-
-    @OneToMany(mappedBy = "country", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<Region> regions;
 }

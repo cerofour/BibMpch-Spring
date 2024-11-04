@@ -41,7 +41,7 @@ public class AuthService {
 				.build();
 	}
 
-	public LoginResponse signup(UserDTO registerUserDTO) {
+	public User signup(UserDTO registerUserDTO) throws EntityNotFoundException {
 
 		Gender gender = genderRepository.findById(registerUserDTO.getGenderId())
 				.orElseThrow(() -> new EntityNotFoundException("Género no encontrado"));
@@ -58,10 +58,6 @@ public class AuthService {
 				.gender(gender)
 				.build();
 
-		userRepository.save(user);
-
-		return LoginResponse.builder()
-				.token(jwtService.getToken(user))
-				.build();
+		return userRepository.save(user);
 	}
 }

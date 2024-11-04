@@ -22,7 +22,4 @@ public class Region {
 
     @Column(name = "regi_nombre")
     private String regionName;
-
-    @OneToMany(mappedBy = "region", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<Province> provinces;
 }
