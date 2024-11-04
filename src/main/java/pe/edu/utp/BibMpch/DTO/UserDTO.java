@@ -5,9 +5,15 @@ import lombok.Data;
 
 @Data
 @Builder
-public class RegisterUserDTO {
+public class UserDTO {
 	private String document;
 	private Short documentTypeId;
 	private Short roleId;
 	private String psk;
+
+	private String name;
+	private String plastname;
+	private String mlastname;
+	private String phoneNumber;
+	private Short genderId;
 }

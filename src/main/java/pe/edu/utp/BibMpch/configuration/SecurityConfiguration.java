@@ -25,7 +25,7 @@ public class SecurityConfiguration {
 				.csrf(AbstractHttpConfigurer::disable)
 				.authorizeHttpRequests((authRequest) -> authRequest
 						.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()  // Allow OPTIONS requests
-						.requestMatchers("/auth/*").permitAll()
+						.requestMatchers("/auth/login").permitAll()
 						.anyRequest().authenticated())
 				.sessionManagement(session -> session
 						.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -34,20 +34,4 @@ public class SecurityConfiguration {
 
 		return http.build();
 	}
-
-/*
-	@Bean
-	CorsConfigurationSource corsConfigurationSource() {
-		CorsConfiguration configuration = new CorsConfiguration();
-		configuration.addAllowedOrigin("*");
-		configuration.setAllowedMethods(List.of("GET","POST"));
-		configuration.setAllowedHeaders(List.of("Authorization","Content-Type"));
-
-		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-
-		source.registerCorsConfiguration("/**",configuration);
-
-		return source;
-	}
- */
 }

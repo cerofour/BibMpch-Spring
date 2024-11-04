@@ -5,7 +5,6 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -57,14 +56,8 @@ public class JwtService {
 	}
 
 	public boolean isTokenValid(String token, UserDetails userDetails) {
-		System.out.println("isTokenValid?");
-		System.out.println(getExpiration(token));
-		System.out.println(new Date());
 		final String username = getUsernameFromToken(token);
-		boolean x =(username.equals(userDetails.getUsername()) && !isTokenExpired(token));
-		if (x)
-			System.out.println("token valid");
-		return x;
+		return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
 	}
 
 	private Claims getAllClaims(String token) {
