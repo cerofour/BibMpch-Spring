@@ -10,7 +10,7 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: [ "cerofour-patch-1" ]
+    branches: [ "master" ]
 
 jobs:
   build:
