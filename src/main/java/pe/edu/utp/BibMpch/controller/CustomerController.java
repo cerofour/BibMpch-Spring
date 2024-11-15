@@ -1,7 +1,6 @@
 package pe.edu.utp.BibMpch.controller;
 
 import lombok.AllArgsConstructor;
-import org.apache.coyote.BadRequestException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pe.edu.utp.BibMpch.DTO.CustomerDTO;
@@ -25,10 +24,10 @@ public class CustomerController {
 	}
 
 	@GetMapping(value = "/get")
-	public ResponseEntity<Customer> getById(@PathVariable Optional<Long> id) throws BadRequestException {
+	public ResponseEntity<Customer> getById(@PathVariable Optional<Long> id) {
 
 		Customer customer = id.map(customerService::getCustomerById)
-						.orElseThrow(BadRequestException::new);
+						.orElseThrow(null);
 
 		return ResponseEntity.ok(customer);
 	}
