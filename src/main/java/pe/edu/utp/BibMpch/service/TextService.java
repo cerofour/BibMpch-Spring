@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import pe.edu.utp.BibMpch.DTO.TextDTO;
+import pe.edu.utp.BibMpch.configuration.ImageConfiguration;
 import pe.edu.utp.BibMpch.model.Editorial;
 import pe.edu.utp.BibMpch.model.Text;
 import pe.edu.utp.BibMpch.model.TextResourceType;
@@ -27,9 +28,16 @@ public class TextService {
 	private final EditorialRepository editorialRepository;
 	private final TextResourceTypeRepository textResourceTypeRepository;
 
+	private final ImageConfiguration imageConfiguration;
+
 	public List<Text> allTexts() {
 		List<Text> textResources = new ArrayList<>();
-		textRepository.findAll().forEach(textResources::add);
+		textRepository.findAll().forEach(
+				element -> {
+					element.setImageUrl(
+							"%s/%d".formatted(imageConfiguration.getEndpointText(), element.getId()));
+					textResources.add(element);
+				});
 		return textResources;
 	}
 
