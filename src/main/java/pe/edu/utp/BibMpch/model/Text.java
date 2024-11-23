@@ -50,4 +50,7 @@ public class Text {
 			joinColumns = @JoinColumn(name = "reau_recurso_textual_id"),
 			inverseJoinColumns = @JoinColumn(name = "reau_autor_id"))
 	private Set<Author> authors;
+
+	@Transient
+	private String imageUrl;
 }

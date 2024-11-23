@@ -34,4 +34,7 @@ public class Customer {
     @ManyToOne
     @JoinColumn(name = "clie_nivel_educativo_id")
     private Education education;
+
+    @Transient
+    private String imageUrl;
 }

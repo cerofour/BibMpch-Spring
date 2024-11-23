@@ -1,7 +1,9 @@
 package pe.edu.utp.BibMpch.service;
 
 import jakarta.persistence.EntityNotFoundException;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import pe.edu.utp.BibMpch.DTO.CustomerDTO;
 import pe.edu.utp.BibMpch.model.*;
@@ -20,8 +22,6 @@ public class CustomerService {
     private final AddressService addressService;
 
     public Customer createCustomer(CustomerDTO customerDTO) throws EntityNotFoundException {
-
-        System.out.println(customerDTO);
 
         User user = authService.signup(customerDTO.getUserData());
         Carnet carnet = carnetService.createCarnet(customerDTO.getUserData());
@@ -57,4 +57,5 @@ public class CustomerService {
         }
         customerRepository.deleteById(id);
     }
+
 }
