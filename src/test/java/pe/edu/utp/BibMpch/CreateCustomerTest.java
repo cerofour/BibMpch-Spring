@@ -2,14 +2,14 @@ package pe.edu.utp.BibMpch;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import pe.edu.utp.BibMpch.DTO.AddressDTO;
 import pe.edu.utp.BibMpch.DTO.CustomerDTO;
 import pe.edu.utp.BibMpch.DTO.UserDTO;
 
 import java.security.SecureRandom;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class CreateCustomerTest extends BaseTest {
@@ -71,12 +71,25 @@ public class CreateCustomerTest extends BaseTest {
 						.educationLevelId((short)1)
 						.email(randomEmail)
 						.build());
+		MockMultipartFile imageFile = new MockMultipartFile(
+				"image",                          // Form field name
+				"test-image.jpg",                  // Original file name
+				"image/jpeg",                      // Content type
+				"Sample Image Content".getBytes() // File content
+		);
 
-		mockMvc.perform(post("/api/v1/customers/")
+		MockMultipartFile customerPart = new MockMultipartFile(
+				"customer",                        // Form field name
+				"customer.json",                   // Original file name (optional)
+				"application/json",                // Content type
+				requestBody.getBytes()           // JSON content
+		);
+
+		mockMvc.perform(multipart("/api/v1/customers/")
+						.file(imageFile)               // Add the image file
+						.file(customerPart)            // Add the JSON data
 						.header("Authorization", "Bearer " + token)
-						.accept(MediaType.APPLICATION_JSON)
-						.contentType(MediaType.APPLICATION_JSON)
-						.content(requestBody))
+						.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk());
 		mockMvc.perform(get("/api/v1/users/")
 						.header("Authorization", "Bearer " + token)
