@@ -1,21 +1,13 @@
 package pe.edu.utp.BibMpch;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import pe.edu.utp.BibMpch.DTO.AddressDTO;
 import pe.edu.utp.BibMpch.DTO.CustomerDTO;
 import pe.edu.utp.BibMpch.DTO.UserDTO;
-import pe.edu.utp.BibMpch.model.Customer;
-import pe.edu.utp.BibMpch.model.User;
-import pe.edu.utp.BibMpch.repository.CarnetRepository;
-import pe.edu.utp.BibMpch.repository.CustomerRepository;
-import pe.edu.utp.BibMpch.repository.UserRepository;
 
 import java.security.SecureRandom;
-import java.util.Optional;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -53,7 +45,7 @@ public class CreateCustomerTest extends BaseTest {
 	void shouldCreateCustomerUserAndCarnet() throws Exception {
 
 		final String randomDocument = documentGenerator();
-		final String randomName = generateRandomString(12);
+		final String randomName = "random-test-user" + generateRandomString(12);
 		final String randomPlastname = generateRandomString(12);
 		final String randomMlastname = generateRandomString(12);
 		final String randomPhoneNumber = digitStringGenerator(9);
