@@ -19,9 +19,6 @@ public class Author {
 	@Column(name = "auto_id")
 	private Long id;
 
-	@Column(name = "auto_seudonimo")
-	private String pseudoname;
-
 	@Column(name = "auto_nombre")
 	private String name;
 

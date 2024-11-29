@@ -17,8 +17,14 @@ public class TextDTO {
 	private Short edition;
 	private Short volume;
 
+	private String baseCode;
+
 	private Long editorialId;
 	private Long typeId;
+
+	private Short stock;
+
+	private Boolean available;
 
 	private Set<Long> authors;
 }

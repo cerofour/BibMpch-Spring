@@ -44,12 +44,21 @@ public class Text {
 	@Column(name = "rete_volumen")
 	private Short volume;
 
+	@Column(name = "rete_activo")
+	private Boolean available;
+
+	@Column(name = "rete_codigo_base")
+	private String baseCode;
+
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(
 			name = "tb_recurso_textual_autor",
 			joinColumns = @JoinColumn(name = "reau_recurso_textual_id"),
 			inverseJoinColumns = @JoinColumn(name = "reau_autor_id"))
 	private Set<Author> authors;
+
+	@Transient
+	private Short stock;
 
 	@Transient
 	private String imageUrl;

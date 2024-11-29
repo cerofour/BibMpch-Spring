@@ -35,7 +35,6 @@ public class AuthorService {
 				.name(authorDTO.getName())
 				.pLastName(authorDTO.getPlastname())
 				.mLastName(authorDTO.getMlastname())
-				.pseudoname(authorDTO.getPseudoname())
 				.build();
 
 		return authorRepository.save(author);
