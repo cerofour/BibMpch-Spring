@@ -19,7 +19,7 @@ import pe.edu.utp.BibMpch.exceptions.ResourceNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 @Service
@@ -153,62 +153,11 @@ public class TextService {
 			List<CodeTextualResource> existingResources = codeTextualResourceRepository
 					.findByBaseCode(existingText.getBaseCode());
 
-			// if the new stock is less than the current one
 			if (textDTO.getStock() < existingResources.size()) {
-				List<Long> resourceIdsToDelete = new ArrayList<>();
-				int difference = existingResources.size() - textDTO.getStock();
-				int loanedResourceCount;
-
-				for (CodeTextualResource existingResource: existingResources ){
-					long loanCount = loanRepository.countByCodeTextualResource(existingResource);
-
-					if (loanCount == 0)
-						resourceIdsToDelete.add(existingResource.getId());
-
-				}
-
-				loanedResourceCount = existingResources.size() - resourceIdsToDelete.size();
-
-				if(loanedResourceCount > textDTO.getStock()
-						|| loanedResourceCount == textDTO.getStock()) {
-
-					if (!resourceIdsToDelete.isEmpty())
-						codeTextualResourceRepository.deleteAllById(resourceIdsToDelete);
-
-				}else { //loanedResourceCount < textDTO.getStock()
-
-					if(!resourceIdsToDelete.isEmpty())
-						codeTextualResourceRepository.deleteAllById(
-								resourceIdsToDelete.subList(
-										resourceIdsToDelete.size() - difference,
-										resourceIdsToDelete.size()
-								)
-						);
-				}
-
+				handleStockReduction(existingResources, textDTO.getStock());
+			} else {
+				handleStockIncrease(existingText, existingResources, textDTO.getStock());
 			}
-			else if (textDTO.getStock() > existingResources.size()) {
-				AtomicInteger count = new AtomicInteger(1);
-				AtomicInteger i = new AtomicInteger(1);
-
-                while (i.get() <= textDTO.getStock()-existingResources.size()) {
-
-                    codeTextualResourceRepository
-                            .findByBaseCodeAndExemplaryCode(existingText.getBaseCode(), count.get())
-                            .ifPresentOrElse(
-									(_) -> {
-                                        count.incrementAndGet();
-                                    },
-                                    () -> {
-                                        codeTextualResourceRepository.save(CodeTextualResource.builder()
-                                                .baseCode(existingText.getBaseCode())
-                                                .exemplaryCode(count.get())
-                                                .available(true)
-                                                .build());
-                                        i.incrementAndGet();
-                                    });
-                }
-            }
 
 			existingText.setStock(getStockText(textDTO.getBaseCode()));
 		}
@@ -216,6 +165,74 @@ public class TextService {
 		textRepository.save(existingText);
 
 		return ResponseEntity.ok(existingText);
+	}
+
+	/*
+	private List<Long> findDeletableResourceIds(List<CodeTextualResource> resources) {
+		return resources.stream()
+				.filter(resource -> loanRepository.countByCodeTextualResource(resource) == 0)
+				.map(CodeTextualResource::getId)
+				.collect(Collectors.toList());
+	}
+	 */
+
+	private void handleStockReduction(List<CodeTextualResource> existingResources, int newStock) {
+		AtomicBoolean borrowedAndAvailableResource = new AtomicBoolean(false);
+
+		List<Long> resourceIdsToDelete = existingResources
+				.stream()
+				.filter(resource -> {
+
+					if(loanRepository.countByCodeTextualResource(resource) == 0)
+						return true;
+					else if (resource.getAvailable())
+						borrowedAndAvailableResource.set(true);
+
+					return false;
+
+				})
+				.map(CodeTextualResource::getId)
+				.collect(Collectors.toList());
+
+		if(!borrowedAndAvailableResource.get() && !resourceIdsToDelete.isEmpty())
+			resourceIdsToDelete.removeFirst();
+
+		int loanedResourceCount = existingResources.size() - resourceIdsToDelete.size();
+
+		if (loanedResourceCount <= newStock) {
+			int deletionCount = Math.min(resourceIdsToDelete.size(),
+					resourceIdsToDelete.size() - (newStock - loanedResourceCount));
+			if (deletionCount > 0) {
+				codeTextualResourceRepository.deleteAllById(
+						resourceIdsToDelete.subList(
+								resourceIdsToDelete.size() - deletionCount,
+								resourceIdsToDelete.size()
+						)
+				);
+			}
+		}
+	}
+
+	private void handleStockIncrease(Text existingText,
+									 List<CodeTextualResource> existingResources,
+									 int newStock) {
+		int resourcesNeeded = newStock - existingResources.size();
+
+		for (int exemplaryCode = 1; resourcesNeeded > 0; exemplaryCode++) {
+			Optional<CodeTextualResource> existingResource = codeTextualResourceRepository
+					.findByBaseCodeAndExemplaryCode(existingText.getBaseCode(), exemplaryCode);
+
+			if (existingResource.isEmpty()) {
+				codeTextualResourceRepository.save(
+						CodeTextualResource.builder()
+								.baseCode(existingText.getBaseCode())
+								.exemplaryCode(exemplaryCode)
+								.available(true)
+								.build()
+				);
+				resourcesNeeded--;
+			}
+		}
 	}
 
 	private Short getStockText(String baseCode) {

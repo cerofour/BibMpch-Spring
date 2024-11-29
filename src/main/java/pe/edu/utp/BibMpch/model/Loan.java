@@ -21,8 +21,8 @@ public class Loan {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "pres_usuario_id")
-    private User user;
+    @JoinColumn(name = "pres_cliente_id")
+    private Customer customer;
 
     @ManyToOne
     @JoinColumn(name = "pres_recurso_textual_codigo_id")

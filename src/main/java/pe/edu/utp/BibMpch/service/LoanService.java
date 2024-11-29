@@ -5,11 +5,11 @@ import org.springframework.stereotype.Service;
 import pe.edu.utp.BibMpch.DTO.LoanDTO;
 import pe.edu.utp.BibMpch.exceptions.ResourceNotFoundException;
 import pe.edu.utp.BibMpch.model.CodeTextualResource;
+import pe.edu.utp.BibMpch.model.Customer;
 import pe.edu.utp.BibMpch.model.Loan;
-import pe.edu.utp.BibMpch.model.User;
 import pe.edu.utp.BibMpch.repository.CodeTextualResourceRepository;
+import pe.edu.utp.BibMpch.repository.CustomerRepository;
 import pe.edu.utp.BibMpch.repository.LoanRepository;
-import pe.edu.utp.BibMpch.repository.UserRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,8 +19,8 @@ import java.util.List;
 public class LoanService {
 
     private final LoanRepository loanRepository;
-    private final UserRepository userRepository;
     private final CodeTextualResourceRepository codeTextualResourceRepository;
+    private final CustomerRepository customerRepository;
 
     public List<Loan> getAllLoans() {
         List<Loan> result = new ArrayList<>();
@@ -35,16 +35,24 @@ public class LoanService {
                 .orElse(null);
     }
 
+    public List<Loan> getByIdCustomer(Long idCustomer) throws ResourceNotFoundException {
+
+        Customer customer = customerRepository.findById(idCustomer)
+                .orElseThrow(() -> new ResourceNotFoundException("Customer not found with ID: " + idCustomer));
+
+        return loanRepository.findByCustomer(customer);
+    }
+
     public Loan create(LoanDTO loanDTO) throws ResourceNotFoundException {
 
-        User user = userRepository.findById(loanDTO.getIdUser())
-                .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + loanDTO.getIdUser()));
+        Customer customer = customerRepository.findById(loanDTO.getIdCustomer())
+                .orElseThrow(() -> new ResourceNotFoundException("Customer not found with ID: " + loanDTO.getIdCustomer()));
 
         CodeTextualResource ctr = codeTextualResourceRepository.findById(loanDTO.getIdCode())
                 .orElseThrow(() -> new ResourceNotFoundException("Textual resource not found with ID: " + loanDTO.getIdCode()));
 
         Loan loan = Loan.builder()
-                .user(user)
+                .customer(customer)
                 .codeTextualResource(ctr)
                 .idTypeLoan(loanDTO.getIdTypeLoan())
                 .idStatusLoan(loanDTO.getIdStatusLoan())
@@ -69,10 +77,10 @@ public class LoanService {
         Loan existingLoan = loanRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Loan not found with ID: " + id));
 
-        if (loanDTO.getIdUser() != null) {
-            User user = userRepository.findById(loanDTO.getIdUser())
-                    .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + loanDTO.getIdUser()));
-            existingLoan.setUser(user);
+        if (loanDTO.getIdCustomer() != null) {
+            Customer customer = customerRepository.findById(loanDTO.getIdCustomer())
+                    .orElseThrow(() -> new ResourceNotFoundException("Customer not found with ID: " + loanDTO.getIdCustomer()));
+            existingLoan.setCustomer(customer);
         }
 
         if (loanDTO.getIdCode() != null) {
