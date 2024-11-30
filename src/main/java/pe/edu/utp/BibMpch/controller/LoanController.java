@@ -29,7 +29,16 @@ public class LoanController {
 
         Loan loan = loanService.getById(id);
 
-        return (loan != null) ? ResponseEntity.ok(loanService.getById(id))
+        return (loan != null) ? ResponseEntity.ok(loan)
+                : ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    }
+
+    @GetMapping(value = "/get/customer")
+    public ResponseEntity<List<Loan>> getByIdCustomer(@PathParam("id") Long id) throws ResourceNotFoundException {
+
+        List<Loan> loan = loanService.getByIdCustomer(id);
+
+        return (loan != null) ? ResponseEntity.ok(loan)
                 : ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 

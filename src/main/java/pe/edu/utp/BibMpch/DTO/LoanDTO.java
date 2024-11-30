@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class LoanDTO {
     private Integer idLoan;
-    private Long idUser;
+    private Long idCustomer;
     private Long idCode;
     private Short idTypeLoan;
     private Short idStatusLoan;
