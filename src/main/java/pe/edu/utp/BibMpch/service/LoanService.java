@@ -14,6 +14,22 @@ import pe.edu.utp.BibMpch.repository.LoanRepository;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Servicio para gestionar la lógica de negocio relacionada con la entidad {@link Loan}.
+ *
+ * <p>Proporciona métodos para crear, obtener, actualizar y manejar los préstamos registrados en el sistema.</p>
+ *
+ * <p><strong>Dependencias:</strong></p>
+ * <ul>
+ *   <li>{@link LoanRepository}: Repositorio para las operaciones de persistencia de préstamos.</li>
+ *   <li>{@link CodeTextualResourceRepository}: Repositorio para gestionar los recursos textuales asociados.</li>
+ *   <li>{@link CustomerRepository}: Repositorio para gestionar los clientes asociados a los préstamos.</li>
+ * </ul>
+ *
+ * @author Huanca
+ * @version 1.0
+ * @since 28/11/2024
+ */
 @Service
 @RequiredArgsConstructor
 public class LoanService {
@@ -22,6 +38,11 @@ public class LoanService {
     private final CodeTextualResourceRepository codeTextualResourceRepository;
     private final CustomerRepository customerRepository;
 
+    /**
+     * Recupera todos los préstamos registrados en el sistema.
+     *
+     * @return Una lista de entidades {@link Loan}.
+     */
     public List<Loan> getAllLoans() {
         List<Loan> result = new ArrayList<>();
 
@@ -30,11 +51,24 @@ public class LoanService {
         return result;
     }
 
+    /**
+     * Obtiene un préstamo específico por su identificador.
+     *
+     * @param id El identificador del préstamo.
+     * @return La entidad {@link Loan} si existe; de lo contrario, <code>null</code>.
+     */
     public Loan getById(Long id) {
         return loanRepository.findById(id)
                 .orElse(null);
     }
 
+    /**
+     * Recupera todos los préstamos asociados a un cliente específico.
+     *
+     * @param idCustomer El identificador del cliente.
+     * @return Una lista de entidades {@link Loan} asociadas al cliente.
+     * @throws ResourceNotFoundException Si el cliente no se encuentra registrado.
+     */
     public List<Loan> getByIdCustomer(Long idCustomer) throws ResourceNotFoundException {
 
         Customer customer = customerRepository.findById(idCustomer)
@@ -43,6 +77,13 @@ public class LoanService {
         return loanRepository.findByCustomer(customer);
     }
 
+    /**
+     * Crea un nuevo préstamo basado en un DTO.
+     *
+     * @param loanDTO DTO que contiene los datos del préstamo.
+     * @return La entidad {@link Loan} creada y persistida.
+     * @throws ResourceNotFoundException Si el cliente o el recurso textual asociado no existen.
+     */
     public Loan create(LoanDTO loanDTO) throws ResourceNotFoundException {
 
         Customer customer = customerRepository.findById(loanDTO.getIdCustomer())
@@ -63,6 +104,14 @@ public class LoanService {
         return loanRepository.save(loan);
     }
 
+    /**
+     * Actualiza el estado de un préstamo.
+     *
+     * @param idLoan       El identificador del préstamo.
+     * @param idStatusLoan El nuevo estado del préstamo.
+     * @return La entidad {@link Loan} actualizada.
+     * @throws ResourceNotFoundException Si el préstamo no se encuentra registrado.
+     */
     public Loan updateStatus(Long idLoan, Short idStatusLoan) throws ResourceNotFoundException {
         Loan existingLoan = loanRepository.findById(idLoan)
                 .orElseThrow(() -> new ResourceNotFoundException("Loan not found with ID: " + idLoan));
@@ -72,6 +121,14 @@ public class LoanService {
         return loanRepository.save(existingLoan);
     }
 
+    /**
+     * Actualiza un préstamo existente con los datos proporcionados en el DTO.
+     *
+     * @param id      El identificador del préstamo.
+     * @param loanDTO DTO que contiene los datos actualizados del préstamo.
+     * @return La entidad {@link Loan} actualizada.
+     * @throws ResourceNotFoundException Si el préstamo, cliente o recurso textual asociado no se encuentran registrados.
+     */
     public Loan update(Long id, LoanDTO loanDTO) throws ResourceNotFoundException {
 
         Loan existingLoan = loanRepository.findById(id)
