@@ -22,6 +22,45 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
+/**
+ * Servicio para gestionar la lógica de negocio relacionada con la entidad {@link Text}.
+ *
+ * <p>Proporciona métodos para manejar textos registrados en el sistema, incluyendo creación,
+ * actualización, eliminación y manejo de inventarios asociados.</p>
+ *
+ * <p><strong>Dependencias:</strong></p>
+ * <ul>
+ *   <li>{@link AuthorRepository}: Repositorio para gestionar los autores asociados a los textos.</li>
+ *   <li>{@link TextRepository}: Repositorio para gestionar las operaciones de persistencia de textos.</li>
+ *   <li>{@link EditorialRepository}: Repositorio para gestionar las editoriales asociadas.</li>
+ *   <li>{@link TextResourceTypeRepository}: Repositorio para manejar los tipos de recursos textuales.</li>
+ *   <li>{@link CodeTextualResourceRepository}: Repositorio para manejar los recursos textuales específicos.</li>
+ *   <li>{@link LoanRepository}: Repositorio para gestionar préstamos asociados a los recursos textuales.</li>
+ *   <li>{@link ImageConfiguration}: Configuración para manejar URLs de imágenes asociadas a los textos.</li>
+ * </ul>
+ *
+ * <p><strong>Métodos principales:</strong></p>
+ * <ul>
+ *   <li>{@link #allTexts()}: Recupera todos los textos registrados en el sistema.</li>
+ *   <li>{@link #getById(Long)}: Obtiene un texto específico por su identificador.</li>
+ *   <li>{@link #newText(TextDTO)}: Crea un nuevo texto basado en un DTO.</li>
+ *   <li>{@link #updateText(Long, TextDTO)}: Actualiza un texto existente basado en un DTO.</li>
+ *   <li>{@link #delete(Text)}: Elimina un texto específico del sistema.</li>
+ *   <li>{@link #handleStockReduction(List, int)}: Maneja la reducción de stock.</li>
+ *   <li>{@link #handleStockIncrease(Text, List, int)}: Maneja el aumento de stock.</li>
+ *   <li>{@link #getStockText(String)}: Calcula el stock actual de un texto.</li>
+ * </ul>
+ *
+ * <p><strong>Anotaciones:</strong></p>
+ * <ul>
+ *   <li><code>@Service</code>: Marca esta clase como un componente de servicio en Spring.</li>
+ *   <li><code>@AllArgsConstructor</code>: Genera un constructor para inicializar las dependencias finales.</li>
+ * </ul>
+ *
+ * @author Huanca, Llacsahuanga
+ * @version 1.0
+ * @since 22/10/2024
+ */
 @Service
 @AllArgsConstructor
 public class TextService {
@@ -35,6 +74,11 @@ public class TextService {
 
 	private final ImageConfiguration imageConfiguration;
 
+	/**
+	 * Recupera todos los textos registrados en el sistema.
+	 *
+	 * @return Una lista de entidades {@link Text} con su información actualizada.
+	 */
 	public List<Text> allTexts() {
 		List<Text> textResources = new ArrayList<>();
 		textRepository.findAll().forEach(
@@ -47,12 +91,25 @@ public class TextService {
 		return textResources;
 	}
 
+	/**
+	 * Obtiene un texto específico por su identificador.
+	 *
+	 * @param id El identificador del texto.
+	 * @return Un objeto {@link Optional<Text>} con la información del texto, si existe.
+	 */
 	public Optional<Text> getById(Long id) {
 		Optional<Text> textById = textRepository.findById(id);
         textById.ifPresent(text -> text.setStock(getStockText(text.getBaseCode())));
 		return textById;
 	}
 
+	/**
+	 * Crea un nuevo texto basado en un DTO.
+	 *
+	 * @param textDTO El DTO que contiene la información del texto a crear.
+	 * @return Una entidad {@link ResponseEntity<Text>} que representa el texto creado.
+	 * @throws ResourceNotFoundException Si no se encuentran la editorial, tipo de texto o autores especificados.
+	 */
 	@Transactional(rollbackFor = Exception.class)
 	public ResponseEntity<Text> newText(TextDTO textDTO) throws ResourceNotFoundException {
 
@@ -112,6 +169,14 @@ public class TextService {
 		return ResponseEntity.ok(text);
 	}
 
+	/**
+	 * Actualiza un texto existente basado en un DTO.
+	 *
+	 * @param id      El identificador del texto a actualizar.
+	 * @param textDTO El DTO que contiene la nueva información del texto.
+	 * @return Una entidad {@link ResponseEntity<Text>} que representa el texto actualizado.
+	 * @throws ResourceNotFoundException Si no se encuentran los recursos asociados al texto.
+	 */
 	@Transactional(rollbackFor = Exception.class)
 	public ResponseEntity<Text> updateText(Long id, TextDTO textDTO) throws ResourceNotFoundException {
 
@@ -176,6 +241,15 @@ public class TextService {
 	}
 	 */
 
+	/**
+	 * Maneja la reducción de stock para los recursos textuales existentes.
+	 *
+	 * <p>Elimina recursos no prestados y disponibles si el nuevo stock es menor al actual.
+	 * En caso de conflictos, prioriza recursos prestados.</p>
+	 *
+	 * @param existingResources Lista de recursos textuales existentes asociados al texto.
+	 * @param newStock          El nuevo valor de stock requerido.
+	 */
 	private void handleStockReduction(List<CodeTextualResource> existingResources, int newStock) {
 		AtomicBoolean borrowedAndAvailableResource = new AtomicBoolean(false);
 
@@ -213,6 +287,15 @@ public class TextService {
 		}
 	}
 
+	/**
+	 * Maneja el aumento de stock para los recursos textuales existentes.
+	 *
+	 * <p>Crea nuevos recursos hasta alcanzar el stock requerido, evitando duplicados.</p>
+	 *
+	 * @param existingText      El texto asociado a los recursos.
+	 * @param existingResources Lista de recursos textuales existentes.
+	 * @param newStock          El nuevo valor de stock requerido.
+	 */
 	private void handleStockIncrease(Text existingText,
 									 List<CodeTextualResource> existingResources,
 									 int newStock) {
@@ -235,10 +318,23 @@ public class TextService {
 		}
 	}
 
+	/**
+	 * Calcula el stock actual de un texto basado en su código base.
+	 *
+	 * @param baseCode El código base del texto.
+	 * @return El stock actual como un valor {@link Short}.
+	 */
 	private Short getStockText(String baseCode) {
 		return (short) codeTextualResourceRepository.findByBaseCode(baseCode).size();
 	}
 
+	/**
+	 * Elimina un texto del sistema.
+	 *
+	 * <p>Realiza una operación de eliminación permanente en el repositorio de textos.</p>
+	 *
+	 * @param textResource El texto a eliminar.
+	 */
 	public void delete(Text textResource) {
 		textRepository.delete(textResource);
 	}

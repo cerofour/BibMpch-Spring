@@ -10,6 +10,26 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+/**
+ * Clase de manejo global de excepciones para la aplicación.
+ *
+ * <p>Esta clase intercepta las excepciones lanzadas por el controlador de Spring y maneja diferentes tipos
+ * de excepciones para devolver respuestas apropiadas con detalles de los errores.</p>
+ *
+ * <p><strong>Dependencias:</strong></p>
+ * <ul>
+ *   <li>{@link BadCredentialsException}: Maneja excepciones relacionadas con credenciales incorrectas.</li>
+ *   <li>{@link AccountStatusException}: Maneja excepciones relacionadas con el estado de la cuenta.</li>
+ *   <li>{@link AccessDeniedException}: Maneja excepciones cuando el acceso es denegado.</li>
+ *   <li>{@link SignatureException}: Maneja excepciones relacionadas con firmas JWT inválidas.</li>
+ *   <li>{@link ExpiredJwtException}: Maneja excepciones cuando un token JWT ha expirado.</li>
+ *   <li>{@link ResourceNotFoundException}: Maneja excepciones cuando un recurso no se encuentra.</li>
+ * </ul>
+ *
+ * @author Llacsahuenga
+ * @version 1.0
+ * @since 21/10/2024
+ */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 	@ExceptionHandler(Exception.class)

@@ -15,6 +15,40 @@ import pe.edu.utp.BibMpch.service.UserService;
 
 import java.util.List;
 
+/**
+ * Controlador para gestionar usuarios.
+ *
+ * Este controlador proporciona endpoints para manejar las operaciones
+ * relacionadas con los usuarios, como listar usuarios, obtener el usuario
+ * actual, actualizar información y eliminar usuarios.
+ *
+ * <p><strong>Rutas base:</strong></p>
+ * <ul>
+ *   <li><code>/api/v1/users/</code>: Lista todos los usuarios.</li>
+ *   <li><code>/api/v1/users/me</code>: Obtiene el usuario autenticado actual.</li>
+ *   <li><code>/api/v1/users/get</code>: Obtiene un usuario por ID o documento.</li>
+ *   <li><code>/api/v1/users/update</code>: Actualiza información de un usuario.</li>
+ *   <li><code>/api/v1/users/update_psk</code>: Actualiza la contraseña de un usuario.</li>
+ *   <li><code>/api/v1/users/delete</code>: Elimina un usuario por ID o documento.</li>
+ * </ul>
+ *
+ * <p><strong>Responsabilidades principales:</strong></p>
+ * <ul>
+ *   <li>Listar todos los usuarios registrados.</li>
+ *   <li>Obtener detalles de usuarios por ID o documento.</li>
+ *   <li>Actualizar datos y contraseñas de usuarios.</li>
+ *   <li>Eliminar usuarios registrados.</li>
+ * </ul>
+ *
+ * <p><strong>Dependencias:</strong></p>
+ * <ul>
+ *   <li><code>UserService</code>: Servicio para la lógica de negocio relacionada con los usuarios.</li>
+ * </ul>
+ *
+ * @author Llacsahuanga
+ * @version 1.0
+ * @since 11/10/2024
+ */
 @CrossOrigin
 @RestController
 @RequestMapping(value = "/api/v1/users")
@@ -23,12 +57,28 @@ public class UserController {
 
 	private final UserService userService;
 
+	/**
+	 * Obtiene una lista de todos los usuarios.
+	 *
+	 * <p><strong>Tipo de solicitud:</strong> GET</p>
+	 * <p><strong>Ruta:</strong> <code>/</code></p>
+	 *
+	 * @return Una lista con todos los usuarios registrados.
+	 */
 	@GetMapping(value = "/")
 	@SuppressWarnings("unused")
 	public ResponseEntity<List<User>> getAllUsers() {
 		return ResponseEntity.ok(userService.allUsers());
 	}
 
+	/**
+	 * Obtiene el usuario autenticado actual.
+	 *
+	 * <p><strong>Tipo de solicitud:</strong> GET</p>
+	 * <p><strong>Ruta:</strong> <code>/me</code></p>
+	 *
+	 * @return Los detalles del usuario autenticado actual.
+	 */
 	@SuppressWarnings("unused")
 	@GetMapping(value = "/me")
 	public ResponseEntity<User> getCurrentUser() {
@@ -36,6 +86,16 @@ public class UserController {
 		return ResponseEntity.ok(thisUser);
 	}
 
+	/**
+	 * Obtiene un usuario por ID o documento.
+	 *
+	 * <p><strong>Tipo de solicitud:</strong> GET</p>
+	 * <p><strong>Ruta:</strong> <code>/get</code></p>
+	 *
+	 * @param document Documento opcional del usuario.
+	 * @param id ID opcional del usuario.
+	 * @return Los detalles del usuario solicitado o un error si no se encuentra.
+	 */
 	@SuppressWarnings("unused")
 	@GetMapping(value = "/get")
 	public ResponseEntity<User> getUser(
@@ -55,6 +115,17 @@ public class UserController {
 				: ResponseEntity.ok(u);
 	}
 
+	/**
+	 * Actualiza la información de un usuario.
+	 *
+	 * <p><strong>Tipo de solicitud:</strong> POST</p>
+	 * <p><strong>Ruta:</strong> <code>/update</code></p>
+	 *
+	 * @param document Documento opcional del usuario.
+	 * @param id ID opcional del usuario.
+	 * @param userDTO Objeto con los datos actualizados del usuario.
+	 * @return Un estado HTTP que indica el resultado de la operación.
+	 */
 	@SuppressWarnings("unused")
 	@PostMapping(value = "/update")
 	public ResponseEntity<Void> update(
@@ -71,6 +142,15 @@ public class UserController {
 		return ResponseEntity.status(status).build();
 	}
 
+	/**
+	 * Actualiza la contraseña de un usuario.
+	 *
+	 * <p><strong>Tipo de solicitud:</strong> POST</p>
+	 * <p><strong>Ruta:</strong> <code>/update_psk</code></p>
+	 *
+	 * @param newPsk Objeto con el documento del usuario y la nueva contraseña.
+	 * @return Un estado HTTP que indica el resultado de la operación.
+	 */
 	@SuppressWarnings("unused")
 	@PostMapping(value = "/update_psk")
 	public ResponseEntity<Void> updatePsk(@RequestBody LoginUserDTO newPsk) {
@@ -78,6 +158,16 @@ public class UserController {
 				.build();
 	}
 
+	/**
+	 * Elimina un usuario por ID o documento.
+	 *
+	 * <p><strong>Tipo de solicitud:</strong> DELETE</p>
+	 * <p><strong>Ruta:</strong> <code>/delete</code></p>
+	 *
+	 * @param document Documento opcional del usuario.
+	 * @param id ID opcional del usuario.
+	 * @return Un estado HTTP que indica el resultado de la operación.
+	 */
 	@DeleteMapping(value = "/delete")
 	@SuppressWarnings("unused")
 	public ResponseEntity<Void> deleteUser(
