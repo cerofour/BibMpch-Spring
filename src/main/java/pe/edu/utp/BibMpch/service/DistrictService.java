@@ -21,6 +21,7 @@ public class DistrictService {
     private final ProvinceRepository provinceRepository;
     private final RegionRepository regionRepository;
     private final CountryRepository countryRepository;
+    private final RegisterActionsService registerActionsService;
 
     public DistrictDTO createDistrict(DistrictDTO districtDTO) {
         Country country = countryRepository.findById(districtDTO.getCountryId())
@@ -51,6 +52,14 @@ public class DistrictService {
 
         District district = districtDTO.toEntity(province);
         District savedDistrict = districtRepository.save(district);
+
+        registerActionsService.newRegisterAction(
+                "Registró un nuevo distrito - ID: %d - Distrito: %s - Provincia: %s".formatted(
+                        savedDistrict.getId(),
+                        savedDistrict.getDistrictName(),
+                        savedDistrict.getProvince().getProvinceName())
+        );
+
         return new DistrictDTO(savedDistrict);
     }
 
@@ -99,6 +108,14 @@ public class DistrictService {
         existingDistrict.setProvince(province);
 
         District updatedDistrict = districtRepository.save(existingDistrict);
+
+        registerActionsService.newRegisterAction(
+                "Actualizó un distrito - ID: %d - Distrito: %s - Provincia: %s".formatted(
+                        updatedDistrict.getId(),
+                        updatedDistrict.getDistrictName(),
+                        updatedDistrict.getProvince().getProvinceName())
+        );
+
         return new DistrictDTO(updatedDistrict);
     }
 

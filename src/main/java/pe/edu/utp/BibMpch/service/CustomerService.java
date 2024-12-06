@@ -16,6 +16,7 @@ import java.util.List;
 public class CustomerService {
     private final CustomerRepository customerRepository;
     private final EducationRepository educationRepository;
+    private final RegisterActionsService registerActionsService;
 
     private final AuthService authService;
     private final CarnetService carnetService;
@@ -39,7 +40,16 @@ public class CustomerService {
                 .address(address)
                 .build();
 
-        return customerRepository.save(customer);
+        Customer saveCustomer = customerRepository.save(customer);
+
+        registerActionsService.newRegisterAction(
+                "Creó un nuevo cliente - ID:%d - Document: %s - UserID: %s".formatted(
+                        saveCustomer.getId(),
+                        saveCustomer.getUser().getDocument(),
+                        saveCustomer.getUser().getUserId())
+        );
+
+        return saveCustomer;
     }
 
     public List<Customer> getAllCustomers() {

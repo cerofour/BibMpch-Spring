@@ -16,6 +16,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AuthorService {
 	private final AuthorRepository authorRepository;
+	private final RegisterActionsService registerActionsService;
 
 	public List<Author> getAllAuthors() {
 		List<Author> result = new ArrayList<>();
@@ -37,7 +38,13 @@ public class AuthorService {
 				.mLastName(authorDTO.getMlastname())
 				.build();
 
-		return authorRepository.save(author);
+		Author saveAuthor =  authorRepository.save(author);
+
+		registerActionsService.newRegisterAction(
+                "Creó un nuevo autor - ID: %d".formatted(saveAuthor.getId())
+		);
+
+		return saveAuthor;
 	}
 
 	public HttpStatusCode deleteById(Long id) {
