@@ -21,6 +21,7 @@ public class LoanService {
     private final LoanRepository loanRepository;
     private final CodeTextualResourceRepository codeTextualResourceRepository;
     private final CustomerRepository customerRepository;
+    private final RegisterActionsService registerActionsService;
 
     public List<Loan> getAllLoans() {
         List<Loan> result = new ArrayList<>();
@@ -60,7 +61,18 @@ public class LoanService {
                 .endDate(loanDTO.getEndDate())
                 .scheduledDate(loanDTO.getScheduledDate())
                 .build();
-        return loanRepository.save(loan);
+
+        Loan saveLoan = loanRepository.save(loan);
+
+        registerActionsService.newRegisterAction(
+                "Registró un nuevo préstamo - ID: %d - Cliente: %d - ID Estado: %s - ID Recurso: %s".formatted(
+                        saveLoan.getId(),
+                        saveLoan.getCustomer().getId(),
+                        saveLoan.getIdStatusLoan(),
+                        saveLoan.getCodeTextualResource().getId())
+        );
+
+        return saveLoan;
     }
 
     public Loan updateStatus(Long idLoan, Short idStatusLoan) throws ResourceNotFoundException {
@@ -69,7 +81,17 @@ public class LoanService {
 
         existingLoan.setIdStatusLoan(idStatusLoan);
 
-        return loanRepository.save(existingLoan);
+        Loan saveLoan = loanRepository.save(existingLoan);
+
+        registerActionsService.newRegisterAction(
+                "Actualizó un préstamo - ID: %d - Cliente: %d - ID Estado: %s - ID Recurso: %s".formatted(
+                        saveLoan.getId(),
+                        saveLoan.getCustomer().getId(),
+                        saveLoan.getIdStatusLoan(),
+                        saveLoan.getCodeTextualResource().getId())
+        );
+
+        return saveLoan;
     }
 
     public Loan update(Long id, LoanDTO loanDTO) throws ResourceNotFoundException {
@@ -105,7 +127,17 @@ public class LoanService {
             existingLoan.setScheduledDate(loanDTO.getScheduledDate());
         }
 
-        return loanRepository.save(existingLoan);
+        Loan saveLoan = loanRepository.save(existingLoan);
+
+        registerActionsService.newRegisterAction(
+                "Actualizó un préstamo - ID: %d - Cliente: %d - ID Estado: %s - ID Recurso: %s".formatted(
+                        saveLoan.getId(),
+                        saveLoan.getCustomer().getId(),
+                        saveLoan.getIdStatusLoan(),
+                        saveLoan.getCodeTextualResource().getId())
+        );
+
+        return saveLoan;
     }
 
 

@@ -9,4 +9,6 @@ import java.util.Optional;
 public interface CodeTextualResourceRepository extends CrudRepository<CodeTextualResource, Long> {
     Optional<CodeTextualResource> findByBaseCodeAndExemplaryCode(String baseCode, Integer exemplaryCode);
     List<CodeTextualResource> findByBaseCode(String baseCode);
+    List<CodeTextualResource> findByBaseCodeAndAvailable(String baseCode, Boolean available);
+    List<CodeTextualResource> findByAvailable(Boolean available);
 }

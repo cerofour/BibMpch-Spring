@@ -14,6 +14,7 @@ import pe.edu.utp.BibMpch.repository.DistrictRepository;
 class AddressService {
 	private AddressRepository addressRepository;
 	private DistrictRepository districtRepository;
+	private RegisterActionsService registerActionsService;
 
 	public Address build(AddressDTO addressDTO) throws EntityNotFoundException {
 		District district = districtRepository.findById(addressDTO.getDistrict())
@@ -24,6 +25,11 @@ class AddressService {
 				.address(addressDTO.getAddress())
 				.build();
 
-		return addressRepository.save(address);
+		Address saveAddress = addressRepository.save(address);
+
+		registerActionsService.newRegisterAction(
+				"Registró una nueva dirección - ID: %d".formatted(saveAddress.getId()));
+
+        return saveAddress;
 	}
 }

@@ -21,6 +21,7 @@ import java.util.function.Function;
 public class UserService {
 	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
+	private final RegisterActionsService registerActionsService;
 
 	public List<User> allUsers() {
 		List<User> users = new ArrayList<>();
@@ -60,6 +61,12 @@ public class UserService {
 		user.setPsk(updated.getPsk());
 		user.setRoleId(updated.getRoleId());
 
+		registerActionsService.newRegisterAction(
+				"Actualizó un usuario - ID: %d - ID Rol: %s".formatted(
+						user.getUserId(),
+						updated.getRoleId())
+		);
+
 		return HttpStatus.OK;
 	}
 
@@ -68,6 +75,9 @@ public class UserService {
 		return user.map((u) -> {
 			u.setPsk(passwordEncoder.encode(newPassword));
 			userRepository.save(u);
+			registerActionsService.newRegisterAction(
+					"Actualizó la contraseña del usuario - ID: %s".formatted(document)
+			);
 			return HttpStatus.OK;
 		}).orElse(HttpStatus.NOT_FOUND);
 	}

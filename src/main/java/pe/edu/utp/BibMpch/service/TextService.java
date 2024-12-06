@@ -32,6 +32,7 @@ public class TextService {
 	private final TextResourceTypeRepository textResourceTypeRepository;
 	private final CodeTextualResourceRepository codeTextualResourceRepository;
 	private final LoanRepository loanRepository;
+	private final RegisterActionsService registerActionsService;
 
 	private final ImageConfiguration imageConfiguration;
 
@@ -109,6 +110,16 @@ public class TextService {
 			throw new RuntimeException("Failed to process resources", e);
 		}
 
+		registerActionsService.newRegisterAction(
+				"Registró un nuevo recurso textual - ID: %d - Título: %s - Código base: %s - Stock: %s"
+						.formatted(
+							text.getId(),
+							text.getTitle(),
+							text.getBaseCode(),
+							text.getStock()
+						)
+		);
+
 		return ResponseEntity.ok(text);
 	}
 
@@ -163,6 +174,16 @@ public class TextService {
 		}
 
 		textRepository.save(existingText);
+
+		registerActionsService.newRegisterAction(
+				"Actualizó un recurso textual - ID: %d - Título: %s - Código base: %s - Stock: %s"
+						.formatted(
+								existingText.getId(),
+								existingText.getTitle(),
+								existingText.getBaseCode(),
+								existingText.getStock()
+						)
+		);
 
 		return ResponseEntity.ok(existingText);
 	}

@@ -5,12 +5,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import pe.edu.utp.BibMpch.DTO.LoanDTO;
 import pe.edu.utp.BibMpch.DTO.TextDTO;
 import pe.edu.utp.BibMpch.configuration.ImageConfiguration;
-import pe.edu.utp.BibMpch.exceptions.ResourceNotFoundException;
 import pe.edu.utp.BibMpch.model.Author;
-import pe.edu.utp.BibMpch.model.Loan;
 import pe.edu.utp.BibMpch.model.Text;
 import pe.edu.utp.BibMpch.service.TextService;
 
@@ -120,8 +117,6 @@ public class TextController {
 	}
 	// endregion
 
-	@PutMapping(value = "/{id}", consumes = "multipart/form-data")
-	@SuppressWarnings("unused")
 	public ResponseEntity<Text> updateText(
 			@PathVariable("id") Long id,
 			@RequestPart("text") TextDTO textDTO,

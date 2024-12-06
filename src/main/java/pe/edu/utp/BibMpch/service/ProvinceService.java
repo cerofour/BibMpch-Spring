@@ -18,6 +18,7 @@ public class ProvinceService {
     private final ProvinceRepository provinceRepository;
     private final RegionRepository regionRepository;
     private final CountryRepository countryRepository;
+    private final RegisterActionsService registerActionsService;
 
     public ProvinceDTO createProvince(ProvinceDTO provinceDTO) {
         Country country = countryRepository.findById(provinceDTO.getCountryId())
@@ -39,6 +40,14 @@ public class ProvinceService {
 
         Province province = provinceDTO.toEntity(region);
         Province savedProvince = provinceRepository.save(province);
+
+        registerActionsService.newRegisterAction(
+                "Registró una nueva provincia - ID: %d - Provincia: %s - Región: %s".formatted(
+                        savedProvince.getId(),
+                        savedProvince.getProvinceName(),
+                        savedProvince.getRegion().getRegionName())
+        );
+
         return new ProvinceDTO(savedProvince);
     }
     public List<ProvinceDTO> getAllProvinces() {
@@ -75,6 +84,14 @@ public class ProvinceService {
         existingProvince.setRegion(region);
 
         Province updatedProvince = provinceRepository.save(existingProvince);
+
+        registerActionsService.newRegisterAction(
+                "Actualizó una provincia - ID: %d - Provincia: %s - Región: %s".formatted(
+                        updatedProvince.getId(),
+                        updatedProvince.getProvinceName(),
+                        updatedProvince.getRegion().getRegionName())
+        );
+
         return new ProvinceDTO(updatedProvince);
     }
     public void deleteProvinceById(Long id) {

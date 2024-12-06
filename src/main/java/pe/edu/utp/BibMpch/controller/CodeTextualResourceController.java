@@ -41,4 +41,14 @@ public class CodeTextualResourceController {
                 : ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 
+    @GetMapping(value = "/get_available")
+    public ResponseEntity<List<CodeTextualResource>> getAvailableCodesById(@PathParam("baseCode") String baseCode) {
+
+        List<CodeTextualResource> ct = codeTextualResourceRepository
+                .findByBaseCodeAndAvailable(baseCode, true);
+
+        return (ct != null) ? ResponseEntity.ok(ct)
+                : ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    }
+
 }

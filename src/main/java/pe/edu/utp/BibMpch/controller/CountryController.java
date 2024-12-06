@@ -31,11 +31,13 @@ public class CountryController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
+
     @PostMapping("/")
     public ResponseEntity<CountryDTO> createCountry(@RequestBody CountryDTO countryDTO) {
         CountryDTO savedCountry = countryService.createCountry(countryDTO);
         return new ResponseEntity<>(savedCountry, HttpStatus.CREATED);
     }
+
     @PostMapping("/update")
     public ResponseEntity<CountryDTO> updateCountry(@RequestParam Short id,
                                                     @RequestBody CountryDTO countryDTO) {
