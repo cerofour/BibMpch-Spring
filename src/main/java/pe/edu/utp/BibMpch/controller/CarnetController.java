@@ -4,6 +4,7 @@ import jakarta.websocket.server.PathParam;
 import lombok.AllArgsConstructor;
 import org.apache.coyote.BadRequestException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,11 +21,13 @@ public class CarnetController {
 
     private final CarnetService carnetService;
 
+    @PreAuthorize("hasAnyRole('Administrador', 'Bibliotecario')")
     @GetMapping(value = "/")
     public ResponseEntity<List<Carnet>> getCarnets() {
         return ResponseEntity.ok(carnetService.getAllCarnets());
     }
 
+    @PreAuthorize("hasAnyRole('Administrador', 'Bibliotecario')")
     @GetMapping(value = "/get")
     public ResponseEntity<Carnet> getById(@PathParam("id") Optional<Long> id) throws BadRequestException {
 
@@ -34,4 +37,8 @@ public class CarnetController {
         return ResponseEntity.ok(customer);
     }
 
+    @GetMapping(value = "/my_carnet")
+    public ResponseEntity<Carnet> getMyCarnet() {
+        return ResponseEntity.ok(null);
+    }
 }

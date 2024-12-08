@@ -3,6 +3,8 @@ package pe.edu.utp.BibMpch.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,9 +30,11 @@ public class AuthenticationController {
 		LoginResponse loginResponse = authService.authenticate(loginUserDTO);
 		if(loginResponse != null)
 			registerActionsService.newRegisterAction("Inició sesión", loginUserDTO.getDocument());
+
 		return ResponseEntity.ok(loginResponse);
 	}
 
+	@PreAuthorize("hasAnyRole('Administrador', 'Bibliotecario')")
 	@PostMapping("signup")
 	public ResponseEntity<User> signup(@RequestBody UserDTO registerUserDTO) {
 		User user = authService.signup(registerUserDTO);

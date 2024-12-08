@@ -11,6 +11,7 @@ import pe.edu.utp.BibMpch.repository.CodeTextualResourceRepository;
 import pe.edu.utp.BibMpch.repository.CustomerRepository;
 import pe.edu.utp.BibMpch.repository.LoanRepository;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,7 +59,6 @@ public class LoanService {
                 .idTypeLoan(loanDTO.getIdTypeLoan())
                 .idStatusLoan(loanDTO.getIdStatusLoan())
                 .initialDate(loanDTO.getInitialDate())
-                .endDate(loanDTO.getEndDate())
                 .scheduledDate(loanDTO.getScheduledDate())
                 .build();
 
@@ -78,6 +78,9 @@ public class LoanService {
     public Loan updateStatus(Long idLoan, Short idStatusLoan) throws ResourceNotFoundException {
         Loan existingLoan = loanRepository.findById(idLoan)
                 .orElseThrow(() -> new ResourceNotFoundException("Loan not found with ID: " + idLoan));
+
+        if (idStatusLoan == (short)2) // devuelto
+            existingLoan.setEndDate(LocalDate.now());
 
         existingLoan.setIdStatusLoan(idStatusLoan);
 

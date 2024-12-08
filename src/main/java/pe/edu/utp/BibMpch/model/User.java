@@ -3,7 +3,9 @@ package pe.edu.utp.BibMpch.model;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import pe.edu.utp.BibMpch.authorization.UserRole;
 
 import java.util.Collection;
 import java.util.List;
@@ -22,8 +24,9 @@ public class User implements UserDetails {
 	@Column(name = "usua_id")
 	private Long userId;
 
-	@Column(name = "usua_rol_usuario_id")
-	private Short roleId;
+	@ManyToOne(cascade = CascadeType.REMOVE)
+	@JoinColumn(name = "usua_rol_usuario_id", referencedColumnName = "rolu_id", nullable = false)
+	private UserRole role;
 
 	@Column(name = "usua_tipo_documento_id")
 	private Short documentTypeId;
@@ -52,7 +55,8 @@ public class User implements UserDetails {
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return List.of();
+		SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + role.getName().toString());
+		return List.of(authority);
 	}
 
 	@Override

@@ -3,6 +3,7 @@ package pe.edu.utp.BibMpch.controller;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import pe.edu.utp.BibMpch.model.Editorial;
 import pe.edu.utp.BibMpch.repository.EditorialRepository;
@@ -14,6 +15,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/v1/editorial")
 @AllArgsConstructor
+@PreAuthorize("hasAnyRole('Administrador', 'Bibliotecario')")
 public class EditorialController {
 
 	private final EditorialRepository editorialRepository;

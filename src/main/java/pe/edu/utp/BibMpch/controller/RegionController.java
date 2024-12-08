@@ -4,6 +4,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import pe.edu.utp.BibMpch.DTO.RegionDTO;
 import pe.edu.utp.BibMpch.service.RegionService;
@@ -12,6 +13,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/regions")
 @RequiredArgsConstructor
+@PreAuthorize("hasAnyRole('Administrador', 'Bibliotecario')")
 public class RegionController {
 
     private final RegionService regionService;

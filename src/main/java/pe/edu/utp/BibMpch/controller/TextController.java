@@ -3,6 +3,7 @@ package pe.edu.utp.BibMpch.controller;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import pe.edu.utp.BibMpch.DTO.TextDTO;
@@ -69,6 +70,7 @@ public class TextController {
 	 */
 	@PostMapping(value = "/", consumes = "multipart/form-data")
 	@SuppressWarnings("unused")
+	@PreAuthorize("hasAnyRole('Administrador', 'Bibliotecario')")
 	public ResponseEntity<Text> newText(
 			@RequestPart("text") TextDTO textDTO,
 			@RequestPart("image") MultipartFile imageFile) throws Exception {
@@ -105,6 +107,7 @@ public class TextController {
 	// region DELETE methods
 	@DeleteMapping("/delete")
 	@SuppressWarnings("unused")
+	@PreAuthorize("hasAnyRole('Administrador', 'Bibliotecario')")
 	public ResponseEntity<Void> delete(@RequestParam(name = "id") Long id ) {
 		Optional<Text> text = textService.getById(id);
 
@@ -117,6 +120,7 @@ public class TextController {
 	}
 	// endregion
 
+	@PreAuthorize("hasAnyRole('Administrador', 'Bibliotecario')")
 	public ResponseEntity<Text> updateText(
 			@PathVariable("id") Long id,
 			@RequestPart("text") TextDTO textDTO,

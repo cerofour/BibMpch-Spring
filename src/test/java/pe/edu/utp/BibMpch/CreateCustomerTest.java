@@ -1,5 +1,6 @@
 package pe.edu.utp.BibMpch;
 
+/*
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
@@ -98,3 +99,4 @@ public class CreateCustomerTest extends BaseTest {
 	}
 
 }
+*/

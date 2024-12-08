@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import pe.edu.utp.BibMpch.DTO.LoginUserDTO;
@@ -37,6 +38,7 @@ public class UserController {
 	}
 
 	@SuppressWarnings("unused")
+	@PreAuthorize("hasAnyRole('Administrador', 'Bibliotecario')")
 	@GetMapping(value = "/get")
 	public ResponseEntity<User> getUser(
 			@RequestParam(name = "document", required = false) Optional<String> document,
@@ -57,6 +59,7 @@ public class UserController {
 
 	@SuppressWarnings("unused")
 	@PostMapping(value = "/update")
+	@PreAuthorize("hasAnyRole('Administrador', 'Bibliotecario')")
 	public ResponseEntity<Void> update(
 			@RequestParam(name = "document", required = false) Optional<String> document,
 			@RequestParam(name = "id", required = false) Optional<Long> id,
@@ -80,6 +83,7 @@ public class UserController {
 
 	@DeleteMapping(value = "/delete")
 	@SuppressWarnings("unused")
+	@PreAuthorize("hasAnyRole('Administrador', 'Bibliotecario')")
 	public ResponseEntity<Void> deleteUser(
 			@RequestParam(name = "document", required = false) Optional<String> document,
 			@RequestParam(name = "id", required = false) Optional<Long> id) {

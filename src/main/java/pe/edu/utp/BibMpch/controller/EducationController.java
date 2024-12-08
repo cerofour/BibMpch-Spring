@@ -4,6 +4,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import pe.edu.utp.BibMpch.DTO.EducationDTO;
 import pe.edu.utp.BibMpch.service.EducationService;
@@ -13,6 +14,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/educations")
 @RequiredArgsConstructor
+@PreAuthorize("hasAnyRole('Administrador', 'Bibliotecario')")
 public class EducationController {
 
     private final EducationService educationService;

@@ -4,6 +4,7 @@ import jakarta.websocket.server.PathParam;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import pe.edu.utp.BibMpch.DTO.LoanDTO;
 import pe.edu.utp.BibMpch.exceptions.ResourceNotFoundException;
@@ -15,6 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/api/v1/loans")
 @AllArgsConstructor
+@PreAuthorize("hasAnyRole('Administrador', 'Bibliotecario')")
 public class LoanController {
 
     private final LoanService loanService;
