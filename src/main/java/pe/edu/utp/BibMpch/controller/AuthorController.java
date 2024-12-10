@@ -3,8 +3,11 @@ package pe.edu.utp.BibMpch.controller;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import pe.edu.utp.BibMpch.DTO.AuthorDTO;
+import pe.edu.utp.BibMpch.DTO.LoanDTO;
+import pe.edu.utp.BibMpch.exceptions.ResourceNotFoundException;
 import pe.edu.utp.BibMpch.model.Author;
 import pe.edu.utp.BibMpch.service.AuthorService;
 
@@ -39,11 +42,18 @@ public class AuthorController {
 	public ResponseEntity<Author> newAuthor(@RequestBody AuthorDTO authorDTO) {
 		return ResponseEntity.ok(authorService.create(authorDTO));
 	}
-
+	
 	@DeleteMapping(value = "/delete")
 	@SuppressWarnings("unused")
 	public ResponseEntity<Void> deleteAuthor(@RequestParam (name = "id") Long id) {
 		return ResponseEntity.status(authorService.deleteById(id))
 				.build();
+	}
+
+	@PutMapping(value = "/{id}")
+	public ResponseEntity<Author> updateAuthor(
+			@PathVariable Long id, @RequestBody AuthorDTO authorDTO) throws ResourceNotFoundException {
+		return ResponseEntity.ok(authorService.update(id, authorDTO));
+
 	}
 }

@@ -33,7 +33,6 @@ public class ImageService {
 	 */
 	public String saveCustomerImage(MultipartFile imageFile, String customerDoc) throws Exception {
 		Path directoryPath = Paths.get(imageConfiguration.getUploadDirCustomer());
-
 		try {
 
 			String fileExtension = getFileExtension(
@@ -59,5 +58,10 @@ public class ImageService {
 			throw new IOException("No se pudo guardar la imagen enviada.");
 		}
 
+	}
+
+	public String updateCustomerImage(MultipartFile imageFile, String customerDoc) throws Exception {
+		if(imageFile == null) return null;
+		return saveCustomerImage(imageFile, customerDoc);
 	}
 }

@@ -85,5 +85,18 @@ public class CustomerController {
 		customer.setImageUrl(imgPath);
 		return ResponseEntity.ok(customer);
 	}
+
+	@PutMapping(value = "/{id}", consumes = "multipart/form-data")
+	public ResponseEntity<Customer> updateCustomer(
+			@PathVariable Long id,
+			@RequestPart("customer") CustomerDTO customerDTO,
+			@RequestPart(value = "image", required = false) MultipartFile imageFile) throws Exception {
+
+		String imgPath = imageService.updateCustomerImage(imageFile, customerDTO.getUserData().getDocument());
+
+		Customer customer = customerService.updateCustomer(id, customerDTO);
+		if(imgPath!=null) customer.setImageUrl(imgPath);
+		return ResponseEntity.ok(customer);
+	}
 }
 
