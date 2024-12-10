@@ -119,7 +119,7 @@ public class TextController {
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 	// endregion
-
+	@PutMapping(value = "/{id}")
 	@PreAuthorize("hasAnyRole('Administrador', 'Bibliotecario')")
 	public ResponseEntity<Text> updateText(
 			@PathVariable("id") Long id,

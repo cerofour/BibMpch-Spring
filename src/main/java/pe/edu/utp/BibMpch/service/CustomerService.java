@@ -13,6 +13,7 @@ import pe.edu.utp.BibMpch.model.*;
 import pe.edu.utp.BibMpch.repository.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +26,8 @@ public class CustomerService {
     private final AuthService authService;
     private final CarnetService carnetService;
     private final AddressService addressService;
+    private final GenderService genderService;
+    private final CarnetRepository carnetRepository;
 
     public Customer createCustomer(CustomerDTO customerDTO) throws EntityNotFoundException {
 
@@ -96,6 +99,48 @@ public class CustomerService {
 
         registerActionsService.newRegisterAction(
                 "Creó un nuevo cliente - ID:%d - Document: %s - UserID: %s".formatted(
+                        saveCustomer.getId(),
+                        saveCustomer.getUser().getDocument(),
+                        saveCustomer.getUser().getUserId())
+        );
+
+        return saveCustomer;
+    }
+
+    public Customer updateCustomer(Long id, CustomerDTO customerDTO) {
+
+        Customer customer = customerRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Cliente no encontrado."));
+
+        User user = customer.getUser();
+
+        Education education = educationRepository.findById(customerDTO.getEducationLevelId())
+                .orElseThrow(() -> new EntityNotFoundException("Nivel educativo no encontrado."));
+
+        Gender gender = genderService.getGenderById(customerDTO.getUserData().getGenderId())
+                .toEntity();
+
+        Address address = addressService.build(customerDTO.getAddressData());
+
+        user.setDocument(customerDTO.getUserData().getDocument());
+        user.setName(customerDTO.getUserData().getName());
+        user.setPLastName(customerDTO.getUserData().getPlastname());
+        user.setMLastName(customerDTO.getUserData().getMlastname());
+        user.setPhoneNumber(customerDTO.getUserData().getPhoneNumber());
+        user.setGender((gender != null) ? gender : user.getGender());
+
+        User saveUser = userRepository.save(user);
+
+        customer.setUser(saveUser);
+        customer.setEmail(customerDTO.getEmail());
+        customer.setCarnet(customer.getCarnet());
+        customer.setEducation(education);
+        customer.setAddress(address);
+
+        Customer saveCustomer = customerRepository.save(customer);
+
+        registerActionsService.newRegisterAction(
+                "Actualizó un nuevo cliente - ID:%d - Document: %s - UserID: %s".formatted(
                         saveCustomer.getId(),
                         saveCustomer.getUser().getDocument(),
                         saveCustomer.getUser().getUserId())
