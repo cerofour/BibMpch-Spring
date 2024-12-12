@@ -9,7 +9,6 @@ import pe.edu.utp.BibMpch.model.Author;
 @ToString
 @NoArgsConstructor
 public class AuthorDTO {
-	private String pseudoname;
 
 	private String name;
 
@@ -18,7 +17,6 @@ public class AuthorDTO {
 	private String mlastname;
 
 	public AuthorDTO(Author a) {
-		this.pseudoname = a.getPseudoname();
 		this.name = a.getName();
 		this.plastname = a.getPLastName();
 		this.mlastname = a.getMLastName();
@@ -27,7 +25,6 @@ public class AuthorDTO {
 	public Author toEntity() {
 		return Author.builder()
 				.name(this.name)
-				.pseudoname(this.pseudoname)
 				.pLastName(this.plastname)
 				.mLastName(this.mlastname)
 				.build();

@@ -1,5 +1,6 @@
 package pe.edu.utp.BibMpch.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import java.util.Optional;
 
@@ -8,6 +9,8 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import pe.edu.utp.BibMpch.DTO.UserDTO;
+import pe.edu.utp.BibMpch.authorization.UserRole;
+import pe.edu.utp.BibMpch.authorization.UserRoleRepository;
 import pe.edu.utp.BibMpch.repository.UserRepository;
 
 import pe.edu.utp.BibMpch.model.User;
@@ -20,7 +23,9 @@ import java.util.function.Function;
 @Service
 public class UserService {
 	private final UserRepository userRepository;
+	private final UserRoleRepository userRoleRepository;
 	private final PasswordEncoder passwordEncoder;
+	private final RegisterActionsService registerActionsService;
 
 	public List<User> allUsers() {
 		List<User> users = new ArrayList<>();
@@ -57,8 +62,18 @@ public class UserService {
 	}
 
 	private HttpStatusCode update(User user, UserDTO updated) {
+
+		UserRole role = userRoleRepository.findById(updated.getRoleId())
+				.orElseThrow(() -> new EntityNotFoundException("Rol no encontrado."));
+
 		user.setPsk(updated.getPsk());
-		user.setRoleId(updated.getRoleId());
+		user.setRole(role);
+
+		registerActionsService.newRegisterAction(
+				"Actualizó un usuario - ID: %d - ID Rol: %s".formatted(
+						user.getUserId(),
+						updated.getRoleId())
+		);
 
 		return HttpStatus.OK;
 	}
@@ -68,6 +83,9 @@ public class UserService {
 		return user.map((u) -> {
 			u.setPsk(passwordEncoder.encode(newPassword));
 			userRepository.save(u);
+			registerActionsService.newRegisterAction(
+					"Actualizó la contraseña del usuario - ID: %s".formatted(document)
+			);
 			return HttpStatus.OK;
 		}).orElse(HttpStatus.NOT_FOUND);
 	}

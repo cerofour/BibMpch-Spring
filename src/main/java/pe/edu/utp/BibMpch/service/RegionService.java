@@ -15,6 +15,7 @@ import java.util.List;
 public class RegionService {
     private final RegionRepository regionRepository;
     private final CountryRepository countryRepository;
+    private final RegisterActionsService registerActionsService;
 
     public RegionDTO createRegion(RegionDTO regionDTO) {
         Country country = countryRepository.findById(regionDTO.getCountryId())
@@ -27,6 +28,14 @@ public class RegionService {
 
         Region region = regionDTO.toEntity(country);
         Region savedRegion = regionRepository.save(region);
+
+        registerActionsService.newRegisterAction(
+                "Registró una nueva región - ID: %d - Región: %s - País: %s".formatted(
+                        savedRegion.getId(),
+                        savedRegion.getRegionName(),
+                        savedRegion.getCountry().getCountryName())
+        );
+
         return new RegionDTO(savedRegion);
     }
     public List<RegionDTO> getAllRegions() {
@@ -54,6 +63,15 @@ public class RegionService {
         existingRegion.setCountry(country);
 
         Region updatedRegion = regionRepository.save(existingRegion);
+
+        registerActionsService.newRegisterAction(
+                "Actualizó una nueva región - ID: %d - Región: %s - País: %s".formatted(
+                        updatedRegion.getId(),
+                        updatedRegion.getRegionName(),
+                        updatedRegion.getCountry().getCountryName())
+        );
+
+
         return new RegionDTO(updatedRegion);
     }
     public void deleteRegionById(Long id) {

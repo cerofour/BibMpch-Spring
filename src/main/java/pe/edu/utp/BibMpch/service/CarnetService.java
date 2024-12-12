@@ -5,12 +5,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pe.edu.utp.BibMpch.DTO.UserDTO;
 import pe.edu.utp.BibMpch.model.Carnet;
+import pe.edu.utp.BibMpch.model.Customer;
 import pe.edu.utp.BibMpch.model.Status;
 import pe.edu.utp.BibMpch.repository.CarnetRepository;
 import pe.edu.utp.BibMpch.repository.StatusRepository;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +32,10 @@ public class CarnetService {
                 .code(userDTO.getDocument() + todayString)
                 .build();
         return carnetRepository.save(carnet);
+    }
+
+    public List<Carnet> getAllCarnets() {
+        return (List<Carnet>) carnetRepository.findAll();
     }
 
     public Carnet getCarnetById(Long id) {

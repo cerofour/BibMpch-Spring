@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import pe.edu.utp.BibMpch.DTO.AuthorDTO;
+import pe.edu.utp.BibMpch.exceptions.ResourceNotFoundException;
 import pe.edu.utp.BibMpch.model.Author;
 import pe.edu.utp.BibMpch.repository.AuthorRepository;
 
@@ -16,6 +17,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AuthorService {
 	private final AuthorRepository authorRepository;
+	private final RegisterActionsService registerActionsService;
 
 	public List<Author> getAllAuthors() {
 		List<Author> result = new ArrayList<>();
@@ -35,10 +37,33 @@ public class AuthorService {
 				.name(authorDTO.getName())
 				.pLastName(authorDTO.getPlastname())
 				.mLastName(authorDTO.getMlastname())
-				.pseudoname(authorDTO.getPseudoname())
 				.build();
 
-		return authorRepository.save(author);
+		Author saveAuthor =  authorRepository.save(author);
+
+		registerActionsService.newRegisterAction(
+                "Creó un nuevo autor - ID: %d".formatted(saveAuthor.getId())
+		);
+
+		return saveAuthor;
+	}
+
+	public Author update(Long id, AuthorDTO authorDTO) throws ResourceNotFoundException {
+
+		Author author = authorRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Customer not found with ID: " + id));
+
+		author.setName(authorDTO.getName());
+		author.setPLastName(authorDTO.getPlastname());
+		author.setMLastName(authorDTO.getMlastname());
+
+		Author saveAuthor = authorRepository.save(author);
+
+		registerActionsService.newRegisterAction(
+				"Actualizó un autor - ID: %d".formatted(saveAuthor.getId())
+		);
+
+		return saveAuthor;
 	}
 
 	public HttpStatusCode deleteById(Long id) {

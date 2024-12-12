@@ -13,10 +13,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CountryService {
     private final CountryRepository countryRepository;
+    private final RegisterActionsService registerActionsService;
 
     public CountryDTO createCountry(CountryDTO countryDTO) {
         Country country = countryDTO.toEntity();
         Country savedCountry = countryRepository.save(country);
+        registerActionsService.newRegisterAction(
+                "Registró un nuevo país - ID: %s".formatted(savedCountry.getId()));
         return new CountryDTO(savedCountry);
     }
     public List<CountryDTO> getAllCountries() {
@@ -32,9 +35,19 @@ public class CountryService {
         Country existingCountry = countryRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Country not found with id: " + id));
 
+        String oldName = existingCountry.getCountryName();
+
         existingCountry.setCountryName(countryDTO.getCountryName());
 
         Country updatedCountry = countryRepository.save(existingCountry);
+
+        registerActionsService.newRegisterAction(
+                "Actualizó un país - ID: %s - Antiguo nombre: %s - Nuevo nombre: %s".formatted(
+                        updatedCountry.getId(),
+                        oldName,
+                        updatedCountry.getCountryName())
+        );
+
         return new CountryDTO(updatedCountry);
     }
     public void deleteCountryById(Short id) {

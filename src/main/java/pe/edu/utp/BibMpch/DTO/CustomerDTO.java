@@ -12,6 +12,7 @@ import pe.edu.utp.BibMpch.model.Customer;
 @Builder
 @AllArgsConstructor
 @ToString
+@NoArgsConstructor
 public class CustomerDTO {
     private UserDTO userData;
     private AddressDTO addressData;

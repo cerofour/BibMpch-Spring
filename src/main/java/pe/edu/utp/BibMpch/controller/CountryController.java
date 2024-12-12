@@ -4,6 +4,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import pe.edu.utp.BibMpch.DTO.CountryDTO;
 import pe.edu.utp.BibMpch.service.CountryService;
@@ -13,6 +14,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/countries")
 @RequiredArgsConstructor
+@PreAuthorize("hasAnyRole('Administrador', 'Bibliotecario')")
 public class CountryController {
 
     private final CountryService countryService;
@@ -31,11 +33,13 @@ public class CountryController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
+
     @PostMapping("/")
     public ResponseEntity<CountryDTO> createCountry(@RequestBody CountryDTO countryDTO) {
         CountryDTO savedCountry = countryService.createCountry(countryDTO);
         return new ResponseEntity<>(savedCountry, HttpStatus.CREATED);
     }
+
     @PostMapping("/update")
     public ResponseEntity<CountryDTO> updateCountry(@RequestParam Short id,
                                                     @RequestBody CountryDTO countryDTO) {
